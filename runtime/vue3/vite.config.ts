@@ -6,7 +6,7 @@ import externalGlobals from 'rollup-plugin-external-globals';
 import { defineConfig } from 'vite';
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/low-code-platform/playground/runtime/vue3',
+  base: '/medical-designer/playground/runtime/vue3',
   plugins: [vue(), vueJsx(), externalGlobals({ vue: 'Vue' }, { exclude: ['page.html', 'playground.html'] }),
   ],
   resolve: {
