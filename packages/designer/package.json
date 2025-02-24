@@ -1,0 +1,68 @@
+{
+  "name": "@lowcode/designer",
+  "type": "module",
+  "version": "1.1.2",
+  "style": "dist/low-code-designer.css",
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "import": "./dist/lowcode-designer.js",
+      "require": "./dist/lowcode-designer.umd.cjs"
+    },
+    "./style": {
+      "import": "./dist/lowcode-designer.css",
+      "require": "./dist/lowcode-designer.css"
+    }
+  },
+  "main": "dist/lowcode-designer.umd.cjs",
+  "module": "dist/lowcode-designer.js",
+  "types": "types/index.d.ts",
+  "scripts": {
+    "build": "npm run build:type && vite build",
+    "build:type": "npm run clear:type && vue-tsc --declaration --emitDeclarationOnly --project tsconfig.build.json",
+    "clear:type": "rimraf ./types"
+  },
+  "peerDependencies": {
+    "monaco-editor": "^0.52.2",
+    "naive-ui": "^2.40.4",
+    "vue": "^3.5.13"
+  },
+  "dependencies": {
+    "@lowcode/core": "workspace:^",
+    "@lowcode/form": "workspace:^",
+    "@lowcode/schema": "workspace:^",
+    "@lowcode/stage": "workspace:^",
+    "@lowcode/utils": "workspace:^",
+    "@vicons/antd": "^0.13.0",
+    "buffer": "^6.0.3",
+    "eventemitter3": "^5.0.1",
+    "gesto": "^1.19.4",
+    "keycon": "^1.4.0",
+    "lodash-es": "^4.17.21",
+    "monaco-editor": "^0.52.2",
+    "naive-ui": "^2.41.0",
+    "serialize-javascript": "^6.0.2"
+  },
+  "devDependencies": {
+    "@tsconfig/node20": "^20.1.4",
+    "@types/jsdom": "^21.1.7",
+    "@types/lodash-es": "^4.17.12",
+    "@types/node": "^20.17.17",
+    "@types/serialize-javascript": "^5.0.4",
+    "@unocss/reset": "^65.4.3",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "@vitejs/plugin-vue-jsx": "^4.1.1",
+    "@vitest/eslint-plugin": "1.1.7",
+    "@vue/test-utils": "^2.4.6",
+    "@vue/tsconfig": "^0.7.0",
+    "@vueuse/core": "^12.5.0",
+    "jsdom": "^26.0.0",
+    "rimraf": "^6.0.1",
+    "sass-embedded": "^1.83.4",
+    "unplugin-auto-import": "^19.0.0",
+    "unplugin-vue-components": "^28.0.0",
+    "vite": "^6.1.0",
+    "vitest": "^3.0.5",
+    "vue-tsc": "2.0.29"
+  }
+}

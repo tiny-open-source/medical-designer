@@ -1,0 +1,35 @@
+{
+  "name": "@lowcode/ai",
+  "type": "module",
+  "version": "1.1.2",
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "import": "./dist/lowcode-ai.js",
+      "require": "./dist/lowcode-ai.umd.cjs"
+    }
+  },
+  "main": "dist/lowcode-ai.umd.cjs",
+  "module": "dist/lowcode-ai.js",
+  "types": "types/index.d.ts",
+  "engines": {
+    "node": ">=14"
+  },
+  "scripts": {
+    "build": "npm run build:type && vite build",
+    "build:type": "npm run clear:type && tsc --declaration --emitDeclarationOnly --project tsconfig.build.json",
+    "clear:type": "rimraf ./types"
+  },
+  "dependencies": {
+    "@langchain/core": "^0.3.40",
+    "@lowcode/schema": "workspace:^",
+    "langchain": "^0.3.19",
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.17",
+    "rimraf": "^6.0.1",
+    "vite": "^6.1.0",
+    "vue-tsc": "2.0.29"
+  }
+}

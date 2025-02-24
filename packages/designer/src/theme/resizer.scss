@@ -1,0 +1,19 @@
+@use "./common/variables";
+
+.#{variables.$namespace}-resizer {
+  border-left: 2px solid transparent;
+  border-right: 2px solid transparent;
+  width: 8px;
+  margin: 0 -5px;
+  height: 100%;
+  opacity: .8;
+  background: padding-box #d8dee8;
+  box-sizing: border-box;
+  cursor: col-resize;
+  z-index: 1;
+  position: relative;
+
+  &:hover {
+    border-color: #d8dee8;
+  }
+}

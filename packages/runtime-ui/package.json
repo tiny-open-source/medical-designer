@@ -1,0 +1,20 @@
+{
+  "name": "@lowcode/runtime-ui",
+  "type": "module",
+  "version": "1.1.2",
+  "description": "",
+  "author": "",
+  "license": "ISC",
+  "keywords": [],
+  "main": "src/index.ts",
+  "dependencies": {
+    "@lowcode/core": "workspace:^",
+    "@lowcode/schema": "workspace:^",
+    "@lowcode/utils": "workspace:^",
+    "qrcode": "^1.5.4",
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "@types/qrcode": "^1.5.5"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "name": "@lowcode/schema",
+  "type": "module",
+  "version": "1.1.2",
+  "description": "",
+  "author": "",
+  "license": "ISC",
+  "keywords": [],
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "import": "./dist/lowcode-schema.js",
+      "require": "./dist/lowcode-schema.umd.cjs"
+    },
+    "./style": {
+      "import": "./dist/lowcode-schema.css",
+      "require": "./dist/lowcode-schema.css"
+    }
+  },
+  "main": "dist/lowcode-schema.umd.js",
+  "module": "dist/lowcode-schema.js",
+  "types": "types/index.d.ts",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "npm run build:type && vite build",
+    "build:type": "npm run clear:type && tsc --declaration --emitDeclarationOnly --project tsconfig.build.json",
+    "clear:type": "rimraf ./types"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.17",
+    "rimraf": "^6.0.1",
+    "vite": "^6.1.0",
+    "vue-tsc": "2.0.29"
+  }
+}

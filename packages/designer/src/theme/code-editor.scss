@@ -1,0 +1,8 @@
+@use "./common/variables";
+.#{variables.$namespace}-code-editor {
+  width: 100%;
+
+  .margin {
+    margin: 0;
+  }
+}

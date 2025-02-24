@@ -1,0 +1,24 @@
+@use "./common/variables";
+
+.#{variables.$namespace}-sidebar {
+  height: 100%;
+
+  &-tab-panel-title {
+    font-size: 12px;
+    white-space: normal;
+  }
+  .n-tabs-nav--left {
+    min-width: 60px;
+    width: 60px;
+    margin-right: 0;
+  }
+
+  .n-tabs-nav-scroll-content {
+    width: 100%;
+  }
+  .n-tabs-tab {
+    white-space: wrap;
+    text-align: center;
+    justify-content: center;
+  }
+}

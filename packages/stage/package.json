@@ -1,0 +1,52 @@
+{
+  "name": "@lowcode/stage",
+  "type": "module",
+  "version": "1.1.2",
+  "description": "",
+  "author": "",
+  "license": "ISC",
+  "keywords": [
+    "vue"
+  ],
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "import": "./dist/lowcode-stage.js",
+      "require": "./dist/lowcode-stage.umd.cjs"
+    },
+    "./dist/style.css": {
+      "import": "./dist/style.css",
+      "require": "./dist/style.css"
+    },
+    "./*": "./*"
+  },
+  "main": "dist/lowcode-stage.umd.cjs",
+  "module": "dist/lowcode-stage.js",
+  "types": "dist/index.d.ts",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "npm run build:type && vite build",
+    "build:type": "npm run clear:type && tsc --declaration --emitDeclarationOnly --project tsconfig.build.json",
+    "clear:type": "rimraf ./types"
+  },
+  "dependencies": {
+    "@lowcode/core": "workspace:^",
+    "@lowcode/schema": "workspace:^",
+    "@lowcode/utils": "workspace:^",
+    "@scena/guides": "^0.29.2",
+    "eventemitter3": "^5.0.1",
+    "keycon": "^1.4.0",
+    "lodash-es": "^4.17.21",
+    "moveable": "^0.53.0",
+    "moveable-helper": "^0.4.0"
+  },
+  "devDependencies": {
+    "@types/lodash-es": "^4.17.12",
+    "@types/node": "^20.17.17",
+    "rimraf": "^6.0.1",
+    "vite": "^6.1.0",
+    "vue-tsc": "2.0.29"
+  }
+}

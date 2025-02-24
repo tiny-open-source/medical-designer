@@ -1,0 +1,49 @@
+name: pages
+
+on:
+  push:
+    # Sequence of patterns matched against refs/tags
+    tags:
+      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+  workflow_dispatch:
+
+jobs:
+  pages:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          ref: main
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+
+      - name: Set node version to 18
+        uses: actions/setup-node@v2
+        with:
+          node-version: 18
+          cache: pnpm
+
+      - run: pnpm install
+
+      - name: Build Playground site
+        run: npm run build:playground
+
+      - name: clean dist
+        run: rm -rf dist
+
+      - name: mkdir dist
+        run: mkdir dist && mkdir dist/playground
+
+      - name: move to dist
+        run: mv playground/dist/* dist/playground
+
+      - name: Deploy to GitHub Pages
+        uses: crazy-max/ghaction-github-pages@v2
+        with:
+          target_branch: gh-pages
+          build_dir: dist
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
