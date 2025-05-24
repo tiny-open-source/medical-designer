@@ -211,3 +211,6 @@ export function isSameDomain(targetUrl = '', source = globalThis.location.host) 
 export function setValueByKeyPath(keys: string | number, value: any, data: Record<string | number, any> = {}): any {
   return objectSet(data, keys, value);
 }
+export function isDefined(value: any): boolean {
+  return value !== undefined && value !== null;
+}

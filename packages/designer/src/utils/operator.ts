@@ -1,10 +1,9 @@
 import type { Id, MContainer, MNode } from '@low-code/schema';
 
 import type { AddMNode, PastePosition } from '../type';
-import { isPage } from '@low-code/utils';
+import { isDefined, isPage } from '@low-code/utils';
 import { isEmpty } from 'lodash-es';
 import { toRaw } from 'vue';
-
 import designerService from '../services/designer.service';
 import propsService from '../services/props.service';
 import { generatePageNameByApp, getInitPositionStyle } from '../utils/editor';
@@ -37,10 +36,10 @@ export async function beforePaste(position: PastePosition, config: MNode[]): Pro
 
       // 将所有待粘贴元素坐标相对于多选第一个元素坐标重新计算，以保证多选粘贴后元素间距不变
       if (isDefined(pastePosition.left) && isDefined(configItem.style?.left)) {
-        pastePosition.left = configItem.style!.left - referenceLeft + pastePosition.left;
+        pastePosition.left = configItem.style!.left - referenceLeft + pastePosition.left!;
       }
       if (isDefined(pastePosition.top) && isDefined(configItem.style?.top)) {
-        pastePosition.top = configItem.style?.top - referenceTop + pastePosition.top;
+        pastePosition.top = configItem.style?.top - referenceTop + pastePosition.top!;
       }
 
       const pasteConfig = await propsService.setNewItemId(configItem);

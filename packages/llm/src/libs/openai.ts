@@ -45,7 +45,7 @@ export async function getAllOpenAIModels({
       });
 
       const data = await resGoogle.json();
-      return data.models.map(model => ({
+      return data.models.map((model: any) => ({
         id: model.name.replace(/^models\//, ''),
         name: model.name.replace(/^models\//, ''),
       })) as Model[];
