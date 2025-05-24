@@ -2,7 +2,7 @@
 import type { PropType } from 'vue';
 import type { HiddenConfig } from '../schema';
 import { NColorPicker } from 'naive-ui';
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 import fieldProps from '../utils/fieldProps';
 
 defineOptions({
@@ -19,7 +19,7 @@ const emit = defineEmits(['change']);
 const modelName = computed(() => props.name || props.config.name || '');
 
 const modelValue = computed({
-  get: () => props.model[modelName.value],
+  get: () => props.model[modelName.value] || void 0,
   set: (value) => {
     emit('change', value);
   },
@@ -27,5 +27,5 @@ const modelValue = computed({
 </script>
 
 <template>
-  <NColorPicker v-if="model" v-model:value="modelValue" />
+  <NColorPicker v-if="model" v-model:value="modelValue" :actions="['clear']" />
 </template>

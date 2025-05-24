@@ -1,12 +1,25 @@
 <script setup lang="ts">
-import type { EventOption } from '@lowcode/core';
-import type { FormConfig } from '@lowcode/form';
-import type { MApp, MContainer, MNode } from '@lowcode/schema';
-import type StageCore from '@lowcode/stage';
-import type { MoveableOptions } from '@lowcode/stage';
-import type { ComponentGroup, MenuBarData, MenuButton, MenuComponent, Services, SideBarData, StageRect } from './type';
-import { CONTAINER_HIGHLIGHT_CLASS, ContainerHighlightType } from '@lowcode/stage';
-import { onBeforeUnmount, provide, reactive, ref, toRaw, watch } from 'vue';
+import type { EventOption } from '@low-code/core';
+import type { FormConfig } from '@low-code/form';
+import type { MApp, MContainer, MNode } from '@low-code/schema';
+import type StageCore from '@low-code/stage';
+import type { MoveableOptions } from '@low-code/stage';
+import type {
+  ComponentGroup,
+  MenuBarData,
+  MenuButton,
+  MenuComponent,
+  Services,
+  SideBarData,
+  StageOptions,
+  StageRect,
+} from './type';
+import {
+  CONTAINER_HIGHLIGHT_CLASS,
+  ContainerHighlightType,
+} from '@low-code/stage';
+import { NDialogProvider, NMessageProvider, NModalProvider } from 'naive-ui';
+import { onBeforeUnmount, provide, toRaw, watch } from 'vue';
 import Framework from './layouts/Framework.vue';
 import NavMenu from './layouts/NavMenu.vue';
 import PropsPanel from './layouts/PropsPanel.vue';
@@ -17,6 +30,7 @@ import designerService from './services/designer.service';
 import eventsService from './services/events.service';
 import historyService from './services/history.service';
 import propsService from './services/props.service';
+import stageOverlayService from './services/stage-overlay.service';
 import storageService from './services/storage.service';
 import uiService from './services/ui.service';
 
@@ -30,7 +44,10 @@ const props = withDefaults(
     defaultSelected?: number | string;
     moveableOptions: MoveableOptions | ((core?: StageCore) => MoveableOptions);
     propsConfigs: Record<string, FormConfig>;
-    eventMethodList: Record<string, { events: EventOption[]; methods: EventOption[] }>;
+    eventMethodList: Record<
+      string,
+      { events: EventOption[]; methods: EventOption[] }
+    >;
     menu: MenuBarData;
     /** 左侧面板配置 */
     sidebar?: SideBarData;
@@ -51,7 +68,8 @@ const props = withDefaults(
     menu: () => ({ left: [], right: [] }),
     componentGroupList: () => [],
     propsValues: () => ({}),
-    isContainer: (el: HTMLElement) => el.classList.contains('lowcode-ui-container'),
+    isContainer: (el: HTMLElement) =>
+      el.classList.contains('low-code-ui-container'),
     containerHighlightClassName: CONTAINER_HIGHLIGHT_CLASS,
     containerHighlightDuration: 800,
     containerHighlightType: ContainerHighlightType.DEFAULT,
@@ -90,6 +108,7 @@ const services: Services = {
   propsService,
   componentListService,
   storageService,
+  stageOverlayService,
 };
 
 watch(
@@ -160,21 +179,22 @@ onBeforeUnmount(() => {
   storageService.destroy();
 });
 provide<Services>('services', services);
-provide(
-  'stageOptions',
-  reactive({
-    runtimeUrl: props.runtimeUrl,
-    autoScrollIntoView: true,
-    render: null,
-    moveableOptions: props.moveableOptions,
-    canSelect: (el: HTMLElement) => Boolean(el.id),
-    updateDragEl: null,
-    isContainer: props.isContainer,
-    containerHighlightClassName: props.containerHighlightClassName,
-    containerHighlightDuration: props.containerHighlightDuration,
-    containerHighlightType: props.containerHighlightType,
-  }),
-);
+
+const stageOptions: StageOptions = {
+  runtimeUrl: props.runtimeUrl,
+  autoScrollIntoView: true,
+  render: undefined,
+  moveableOptions: props.moveableOptions,
+  canSelect: (el: HTMLElement) => Boolean(el.id),
+  updateDragEl: undefined,
+  isContainer: props.isContainer,
+  containerHighlightClassName: props.containerHighlightClassName,
+  containerHighlightDuration: props.containerHighlightDuration,
+  containerHighlightType: props.containerHighlightType,
+};
+stageOverlayService.set('stageOptions', stageOptions);
+
+provide('stageOptions', stageOptions);
 designerService.usePlugin({
   beforeDoAdd: (config: MNode, parent?: MContainer | null) => {
     if (config.type === 'overlay') {
@@ -196,45 +216,51 @@ defineExpose({
 </script>
 
 <template>
-  <Framework>
-    <template #header>
-      <slot name="header">
-        <NavMenu :data="menu" />
-      </slot>
-    </template>
-    <template #sidebar>
-      <slot name="sidebar">
-        <Sidebar :data="sidebar">
-          <template #layer-panel-header>
-            <slot name="layer-panel-header" />
+  <NMessageProvider>
+    <NDialogProvider>
+      <NModalProvider>
+        <Framework>
+          <template #header>
+            <slot name="header">
+              <NavMenu :data="menu" />
+            </slot>
           </template>
+          <template #sidebar>
+            <slot name="sidebar">
+              <Sidebar :data="sidebar">
+                <template #layer-panel-header>
+                  <slot name="layer-panel-header" />
+                </template>
 
-          <template #component-list-panel-header>
-            <slot name="component-list-panel-header" />
+                <template #component-list-panel-header>
+                  <slot name="component-list-panel-header" />
+                </template>
+              </Sidebar>
+            </slot>
           </template>
-        </Sidebar>
-      </slot>
-    </template>
-    <template #workspace>
-      <slot name="workspace">
-        <Workspace>
-          <template #stage>
-            <slot name="stage" />
+          <template #workspace>
+            <slot name="workspace">
+              <Workspace>
+                <template #stage>
+                  <slot name="stage" />
+                </template>
+                <template #workspace-content>
+                  <slot name="workspace-content" />
+                </template>
+              </Workspace>
+            </slot>
           </template>
-          <template #workspace-content>
-            <slot name="workspace-content" />
+          <template #props-panel>
+            <slot name="props-panel">
+              <PropsPanel
+                @mounted="(instance) => $emit('propsPanelMounted', instance)"
+              />
+            </slot>
           </template>
-        </Workspace>
-      </slot>
-    </template>
-    <template #props-panel>
-      <slot name="props-panel">
-        <PropsPanel
-          @mounted="(instance) => $emit('propsPanelMounted', instance)"
-        />
-      </slot>
-    </template>
-  </Framework>
+        </Framework>
+      </NModalProvider>
+    </NDialogProvider>
+  </NMessageProvider>
 </template>
 
 <style>

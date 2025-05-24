@@ -1,5 +1,5 @@
 {
-  "name": "@lowcode/runtime-ui",
+  "name": "@low-code/runtime-ui",
   "type": "module",
   "version": "1.1.2",
   "description": "",
@@ -8,9 +8,9 @@
   "keywords": [],
   "main": "src/index.ts",
   "dependencies": {
-    "@lowcode/core": "workspace:^",
-    "@lowcode/schema": "workspace:^",
-    "@lowcode/utils": "workspace:^",
+    "@low-code/core": "workspace:^",
+    "@low-code/schema": "workspace:^",
+    "@low-code/utils": "workspace:^",
     "qrcode": "^1.5.4",
     "vue": "^3.5.13"
   },

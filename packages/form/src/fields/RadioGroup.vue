@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { PropType } from 'vue';
-import { NButton, NIcon, NRadioButton, NRadioGroup, NTooltip } from 'naive-ui';
+import { NIcon, NRadioButton, NRadioGroup, NTooltip } from 'naive-ui';
 import { computed } from 'vue';
 import fieldProps from '../utils/fieldProps';
 import { useAddField } from '../utils/useAddField';

@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "include": [
+    "packages/adapter/src",
+    "packages/core/src",
+    "packages/schema/src",
+    "packages/stage/src",
+    "packages/utils/src"
+  ]
+}

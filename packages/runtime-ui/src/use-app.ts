@@ -1,4 +1,4 @@
-import type Core from '@lowcode/core';
+import type Core from '@low-code/core';
 import { getCurrentInstance, inject, onBeforeUnmount, onMounted } from 'vue';
 
 export function useApp(props: any) {

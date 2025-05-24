@@ -1,31 +1,30 @@
 {
   "compilerOptions": {
-    "target": "esnext",
+    "target": "ESNext",
     "jsx": "preserve",
-    "lib": [
-      "esnext",
-      "dom",
-      "dom.iterable",
-      "scripthost"
-    ],
+    "jsxImportSource": "vue",
+    "lib": ["ESNext", "DOM"],
     "useDefineForClassFields": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "baseUrl": ".",
-    "module": "esnext",
-    "moduleResolution": "node",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "paths": {
       // 内部模块都指向 src/index.ts, 会有更好的代码跳转体验.
-      "@lowcode/*": ["./packages/*/src"],
-      "@designer/*": ["./packages/designer/src/*"]
+      "@low-code/*": ["./packages/*/src"],
+      "@designer/*": ["./packages/designer/src/*"],
+      "@form/*": ["./packages/form/src/*"]
     },
     "resolveJsonModule": true,
     "types": [
-      "node"
+      "node",
+      "vite/client"
     ],
     "strict": true,
     "declaration": true,
     "importHelpers": true,
+    "outDir": "temp",
     "sourceMap": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,

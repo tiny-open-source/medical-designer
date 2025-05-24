@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { MPage } from '@lowcode/schema';
+import type { MPage } from '@low-code/schema';
 import { computed } from 'vue';
 import LowCodeRuntimeUiComponent from '../../Component.vue';
 import { useApp } from '../../use-app';
@@ -16,7 +16,7 @@ const style = computed(() => app?.transformStyle(props.config.style || {}));
 <template>
   <div
     :id="`${config.id || ''}`"
-    :class="`lowcode-ui-page lowcode-ui-container lowcode-layout-${config.layout}${
+    :class="`low-code-ui-page low-code-ui-container low-code-layout-${config.layout}${
       config.className ? ` ${config.className}` : ''
     }`"
     :style="style"

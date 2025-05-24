@@ -25,7 +25,7 @@ function inputHandler(value: number | null) {
   lForm?.$emit('fieldInput', props.prop, value);
 }
 const modelValue = computed({
-  get: () => props.model[modelName.value],
+  get: () => Number(props.model[modelName.value]),
   set: (value) => {
     emit('change', value);
   },
@@ -35,7 +35,6 @@ const modelValue = computed({
 <template>
   <NInputNumber
     v-model:value="modelValue"
-    :show-button="false"
     clearable
     :disabled="disabled"
     @input="inputHandler"

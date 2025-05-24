@@ -3,7 +3,7 @@ import type { PropType } from 'vue';
 import type Dialog from '../Dialog.vue';
 import type { FormState, LinkConfig } from '../schema';
 import { NButton } from 'naive-ui';
-import { computed, inject, ref, watchEffect } from 'vue';
+import { computed, inject, ref } from 'vue';
 import fieldProps from '../utils/fieldProps';
 
 defineOptions({
@@ -70,7 +70,6 @@ function action(data: any) {
     props.model[props.name] = data;
     formValue.value = data;
     emit('change', props.model[props.name]);
-    console.log('emit change', props.model[props.name]);
   }
   editor.value?.cancel();
 }

@@ -1,7 +1,7 @@
 import type StageCore from './StageCore';
 import type { Runtime, RuntimeWindow } from './types';
 
-import { getHost, injectStyle, isSameDomain } from '@lowcode/utils';
+import { getHost, injectStyle, isSameDomain } from '@low-code/utils';
 import { EventEmitter } from 'eventemitter3';
 import style from './style.css?raw';
 
@@ -12,7 +12,7 @@ export default class StageRenderer extends EventEmitter {
   public runtime: Runtime | null = null;
   public runtimeUrl?: string;
   public iframe?: HTMLIFrameElement;
-  private render?: (renderer: StageCore) => Promise<HTMLElement> | HTMLElement;
+  private render?: (stage: StageCore) => HTMLDivElement | void | Promise<HTMLDivElement | void>;
 
   constructor({ core }: { core: StageCore }) {
     super();
@@ -68,6 +68,10 @@ export default class StageRenderer extends EventEmitter {
     });
   };
 
+  public getDocument(): Document | undefined {
+    return this.contentWindow?.document;
+  }
+
   public getLowCodeApi = () => ({
     onPageElUpdate: (el: HTMLElement) => this.emit('page-el-update', el),
     onRuntimeReady: (runtime: Runtime) => {
@@ -90,7 +94,7 @@ export default class StageRenderer extends EventEmitter {
   }
 
   private loadHandler = async () => {
-    if (!this.contentWindow?.lowcode) {
+    if (!this.contentWindow?.['low-code']) {
       this.postLowCodeRuntimeReady();
     }
 
@@ -112,7 +116,7 @@ export default class StageRenderer extends EventEmitter {
   private postLowCodeRuntimeReady() {
     this.contentWindow = this.iframe?.contentWindow as RuntimeWindow;
 
-    this.contentWindow.lowcode = this.getLowCodeApi();
+    this.contentWindow['low-code'] = this.getLowCodeApi();
 
     this.contentWindow.postMessage(
       {

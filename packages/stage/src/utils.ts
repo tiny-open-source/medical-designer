@@ -1,5 +1,5 @@
 import type { Offset, SortEventData } from './types';
-import { removeClassName } from '@lowcode/utils';
+import { removeClassName } from '@low-code/utils';
 import { GHOST_EL_ID_PREFIX, Mode, SELECTED_CLASS, ZIndex } from './const';
 
 function getParents(el: Element, relative: Element) {
@@ -21,8 +21,8 @@ export function getTargetElStyle(el: HTMLElement) {
     transform: ${transform};
     left: ${offset.left}px;
     top: ${offset.top}px;
-    width: ${el.clientWidth}px;
-    height: ${el.clientHeight}px;
+    width: ${el.offsetWidth}px;
+    height: ${el.offsetHeight}px;
     border: ${border};
     opacity: 0;
     z-index: ${ZIndex.DRAG_EL};
@@ -138,12 +138,12 @@ export function addSelectedClassName(el: Element, doc: Document) {
   });
 }
 export function calcValueByFontsize(doc: Document, value: number) {
-  const { fontSize } = doc.documentElement.style;
+  // const { fontSize } = doc.documentElement.style;
 
-  if (fontSize) {
-    // const times = Number.parseFloat(fontSize) / 32;
-    // return (value / times).toFixed(2);
-  }
+  // if (fontSize) {
+  //   const times = Number.parseFloat(fontSize) / 32;
+  //   return (value / times).toFixed(2);
+  // }
 
   return value;
 }
@@ -152,9 +152,9 @@ export function calcValueByFontsize(doc: Document, value: number) {
  * @param {number} deltaTop 偏移量
  * @param {object} detail 当前选中的组件配置
  */
-export function down(deltaTop: number, target: HTMLElement | SVGElement): SortEventData | void {
+export function down(deltaTop: number, target: HTMLElement): SortEventData | void {
   let swapIndex = 0;
-  let addUpH = target.clientHeight;
+  let addUpH = target.offsetHeight;
   const brothers = Array.from(target.parentNode?.children || []).filter(
     node => !node.id.startsWith(GHOST_EL_ID_PREFIX),
   );
@@ -168,11 +168,11 @@ export function down(deltaTop: number, target: HTMLElement | SVGElement): SortEv
     if (ele.style?.position === 'fixed') {
       continue;
     }
-    addUpH += ele.clientHeight / 2;
+    addUpH += ele.offsetHeight / 2;
     if (deltaTop <= addUpH) {
       break;
     }
-    addUpH += ele.clientHeight / 2;
+    addUpH += ele.offsetHeight / 2;
     swapIndex = i;
   }
   return {
@@ -188,7 +188,7 @@ export function down(deltaTop: number, target: HTMLElement | SVGElement): SortEv
  * @param {number} deltaTop 偏移量
  * @param {object} detail 当前选中的组件配置
  */
-export function up(deltaTop: number, target: HTMLElement | SVGElement): SortEventData | void {
+export function up(deltaTop: number, target: HTMLElement): SortEventData | void {
   const brothers = Array.from(target.parentNode?.children || []).filter(
     node => !node.id.startsWith(GHOST_EL_ID_PREFIX),
   );
@@ -196,7 +196,7 @@ export function up(deltaTop: number, target: HTMLElement | SVGElement): SortEven
   // 往上移动
   const upEls = brothers.slice(0, index) as HTMLElement[];
 
-  let addUpH = target.clientHeight;
+  let addUpH = target.offsetHeight;
   let swapIndex = upEls.length - 1;
 
   for (let i = upEls.length - 1; i >= 0; i--) {
@@ -207,10 +207,10 @@ export function up(deltaTop: number, target: HTMLElement | SVGElement): SortEven
     if (ele.style.position === 'fixed')
       continue;
 
-    addUpH += ele.clientHeight / 2;
+    addUpH += ele.offsetHeight / 2;
     if (-deltaTop <= addUpH)
       break;
-    addUpH += ele.clientHeight / 2;
+    addUpH += ele.offsetHeight / 2;
 
     swapIndex = i;
   }

@@ -1,6 +1,6 @@
 import type StageCore from './StageCore';
 import type { StageMaskConfig } from './types';
-import { createDiv, injectStyle } from '@lowcode/utils';
+import { createDiv, injectStyle } from '@low-code/utils';
 import KeyController from 'keycon';
 import { throttle } from 'lodash-es';
 import { Mode, MouseButton, ZIndex } from './const';
@@ -69,6 +69,7 @@ export default class StageMask extends Rule {
   private mode: Mode = Mode.ABSOLUTE;
   private pageResizeObserver: ResizeObserver | null = null;
   private wrapperResizeObserver: ResizeObserver | null = null;
+
   constructor(config: StageMaskConfig) {
     const wrapper = createWrapper();
     super(wrapper);
@@ -82,6 +83,7 @@ export default class StageMask extends Rule {
     this.content.addEventListener('wheel', this.mouseWheelHandler, { passive: true });
     this.content.addEventListener('mousemove', this.highlightHandler);
     this.content.addEventListener('mouseleave', this.mouseLeaveHandler);
+    this.content.addEventListener('dblclick', this.dblclickHandler);
 
     const isMac = /mac os x/.test(navigator.userAgent.toLowerCase());
 
@@ -343,6 +345,10 @@ export default class StageMask extends Rule {
     if (!this.isMultiSelectStatus) {
       this.emit('select');
     }
+  };
+
+  private dblclickHandler = (event: MouseEvent): void => {
+    this.emit('dblclick', event);
   };
 
   /**

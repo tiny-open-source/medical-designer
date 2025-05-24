@@ -1,14 +1,25 @@
 <script setup lang="ts">
-import type { MContainer } from '@lowcode/schema';
-import type { Runtime } from '@lowcode/stage';
-import type StageCore from '@lowcode/stage';
+import type { MContainer } from '@low-code/schema';
+import type { Runtime } from '@low-code/stage';
+import type StageCore from '@low-code/stage';
 import type { Services, StageOptions } from '../../type';
-import { calcValueByFontsize, getOffset } from '@lowcode/stage';
+import { calcValueByFontsize, getOffset } from '@low-code/stage';
 import { cloneDeep } from 'lodash-es';
-import { computed, inject, markRaw, onBeforeUnmount, onMounted, ref, toRaw, watch, watchEffect } from 'vue';
+import {
+  computed,
+  inject,
+  markRaw,
+  onBeforeUnmount,
+  onMounted,
+  ref,
+  toRaw,
+  watch,
+  watchEffect,
+} from 'vue';
 import ScrollViewer from '../../components/ScrollViewer.vue';
 import { Layout } from '../../type';
 import { useStage } from '../../utils';
+import StageOverlay from './StageOverlay.vue';
 import ViewerMenu from './ViewerMenu.vue';
 
 const stageContainer = ref<HTMLDivElement | null>(null);
@@ -20,8 +31,16 @@ let runtime: Runtime | null = null;
 const root = computed(() => services?.designerService.get('root'));
 const stageRect = computed(() => services?.uiService.get('stageRect'));
 const zoom = computed(() => services?.uiService.get('zoom') || 1);
-const stageContainerRect = computed(() => services?.uiService.get('stageContainerRect') || { width: 0, height: 0 });
-const isMultiSelect = computed(() => !!(services?.designerService.get('nodes') && services?.designerService.get('nodes').length > 1));
+const stageContainerRect = computed(
+  () => services?.uiService.get('stageContainerRect') || { width: 0, height: 0 },
+);
+const isMultiSelect = computed(
+  () =>
+    !!(
+      services?.designerService.get('nodes')
+      && services?.designerService.get('nodes').length > 1
+    ),
+);
 const page = computed(() => services?.designerService.get('page'));
 const node = computed(() => services?.designerService.get('node'));
 const stageWrap = ref<InstanceType<typeof ScrollViewer> | null>(null);
@@ -81,7 +100,10 @@ async function dropHandler(e: DragEvent) {
 
   let parent: MContainer | null | undefined = page.value;
   if (parentEl) {
-    parent = services?.designerService.getNodeById(parentEl.id, false) as MContainer;
+    parent = services?.designerService.getNodeById(
+      parentEl.id,
+      false,
+    ) as MContainer;
   }
 
   if (e.dataTransfer && parent && stageContainer.value && stage) {
@@ -134,7 +156,8 @@ function contextmenuHandler(e: MouseEvent) {
   }
 }
 onMounted(() => {
-  stageWrap.value?.container && resizeObserver.observe(stageWrap.value.container);
+  stageWrap.value?.container
+  && resizeObserver.observe(stageWrap.value.container);
 });
 onBeforeUnmount(() => {
   stage?.destroy();
@@ -165,4 +188,5 @@ onBeforeUnmount(() => {
       <ViewerMenu ref="menu" :is-multi-select="isMultiSelect" />
     </teleport>
   </ScrollViewer>
+  <StageOverlay />
 </template>

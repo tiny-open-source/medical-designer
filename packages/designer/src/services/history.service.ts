@@ -1,4 +1,4 @@
-import type { Id, MPage } from '@lowcode/schema';
+import type { Id, MPage } from '@low-code/schema';
 import { reactive } from 'vue';
 
 import { UndoRedo } from '../utils/undo-redo';

@@ -1,0 +1,1 @@
+Optimize the ai prompt, 1. Clear goals, roles, and scope 2. Structured instruction and task breakdown 3. Clear guidelines for tool integration and usage 4. Reasoning and planning step by step 5. Get the environment and context 6. Domain-specific expertise and limitations

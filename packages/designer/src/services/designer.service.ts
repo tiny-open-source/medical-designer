@@ -1,10 +1,10 @@
-import type { Id, MApp, MContainer, MNode, MPage } from '@lowcode/schema';
+import type { Id, MApp, MContainer, MNode, MPage } from '@low-code/schema';
 
 import type { AddMNode, DesignerNodeInfo, PastePosition, StoreState } from '../type';
 import type { StepValue } from './history.service';
-import { NodeType } from '@lowcode/schema';
+import { NodeType } from '@low-code/schema';
 
-import { getNodePath, isNumber, isPage, isPop } from '@lowcode/utils';
+import { getNodePath, isNumber, isPage, isPop } from '@low-code/utils';
 import { cloneDeep, isObject, mergeWith, uniq } from 'lodash-es';
 import { reactive, toRaw } from 'vue';
 
@@ -16,6 +16,31 @@ import historyService from './history.service';
 import propsService from './props.service';
 import storageService, { Protocol } from './storage.service';
 
+const canUsePluginMethods = {
+  async: [
+    'getLayout',
+    'select',
+    'doAdd',
+    'add',
+    'doRemove',
+    'remove',
+    'doUpdate',
+    'update',
+    'sort',
+    'copy',
+    'paste',
+    'doPaste',
+    'duAlignCenter',
+    'alignCenter',
+    'moveLayer',
+    'moveToContainer',
+    'move',
+    'undo',
+    'redo',
+    'highlight',
+  ] as const,
+  sync: [],
+};
 class Designer extends BaseService {
   public state: StoreState = reactive({
     root: null,
@@ -34,28 +59,7 @@ class Designer extends BaseService {
 
   constructor() {
     super(
-      [
-        'getLayout',
-        'select',
-        'doAdd',
-        'add',
-        'doRemove',
-        'remove',
-        'doUpdate',
-        'update',
-        'sort',
-        'copy',
-        'paste',
-        'doPaste',
-        'duAlignCenter',
-        'alignCenter',
-        'moveLayer',
-        'moveToContainer',
-        'move',
-        'undo',
-        'redo',
-        'highlight',
-      ],
+      canUsePluginMethods.async.map(methodName => ({ name: methodName, isAsync: true })),
       // 需要注意循环依赖问题，如果函数间有相互调用的话，不能设置为串行调用
       ['select', 'update', 'moveLayer'],
     );
@@ -143,6 +147,33 @@ class Designer extends BaseService {
   public async doPaste(config: MNode[], position: PastePosition = {}): Promise<MNode[]> {
     const pasteConfigs = await beforePaste(position, cloneDeep(config));
     return pasteConfigs;
+  }
+
+  public async replace(nodes: MNode[], config: MNode[] | MNode) {
+    if (config && !Array.isArray(config)) {
+      config = [config];
+    }
+    // 如果粘贴的节点和当前选中的节点相同，则不进行替换
+    if (config![0]!.id === nodes[0].id)
+      return;
+
+    const { parent } = this.getNodeInfo(nodes[0].id, false);
+    const configs = await this.doReplace(nodes, config);
+    await this.remove(nodes);
+    await this.add(configs, parent!);
+  }
+
+  public async doReplace(beReplacedNode: MNode[], replacedNode: MNode[]) {
+    const left = Math.min(...beReplacedNode.map(item => item.style?.left || 0));
+    const top = Math.min(...beReplacedNode.map(item => item.style?.top || 0));
+    const pasteConfigs = await beforePaste({
+      left,
+      top,
+    }, replacedNode);
+    if (pasteConfigs.length > 1) {
+      return pasteConfigs;
+    }
+    return pasteConfigs[0] as AddMNode;
   }
 
   /**
@@ -646,7 +677,7 @@ class Designer extends BaseService {
 
   /**
    * 删除组件
-   * @param {object} node
+   * @param {object} nodeOrNodeList
    */
   public async remove(nodeOrNodeList: MNode | MNode[]): Promise<void> {
     const nodes = Array.isArray(nodeOrNodeList) ? nodeOrNodeList : [nodeOrNodeList];

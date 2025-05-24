@@ -1,5 +1,5 @@
 <script setup lang="ts" name="UISelect">
-import type { FormState } from '@lowcode/form';
+import type { FormState } from '@low-code/form';
 import type { Services } from '../type';
 import { DeleteOutlined } from '@vicons/antd';
 
@@ -19,8 +19,6 @@ const props = withDefaults(defineProps<{
   prop: '',
 });
 const emit = defineEmits(['change']);
-
-console.log(props);
 
 const uiSelectMode = ref(false);
 const services = inject<Services>('services');

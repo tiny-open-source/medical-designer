@@ -10,8 +10,8 @@ export interface EventOption {
   value: string;
 }
 
-const COMMON_EVENT_PREFIX = 'lowcode:common:events:';
-const COMMON_METHOD_PREFIX = 'lowcode:common:actions:';
+const COMMON_EVENT_PREFIX = 'low-code:common:events:';
+const COMMON_METHOD_PREFIX = 'low-code:common:actions:';
 
 const CommonMethod = {
   SHOW: 'show',

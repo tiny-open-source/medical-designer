@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { FormValue } from '@lowcode/form';
+import type { FormValue } from '@low-code/form';
 
 withDefaults(
   defineProps<{

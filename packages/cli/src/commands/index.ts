@@ -14,9 +14,9 @@ export function scripts(defaultAppConfig: UserConfig) {
 
     // resolve user config file
     const userConfigPath = [
-      path.resolve(defaultAppConfig.source, 'lowcode.config.ts'),
-      path.resolve(defaultAppConfig.source, 'lowcode.config.js'),
-      path.resolve(defaultAppConfig.source, 'lowcode.config.cjs'),
+      path.resolve(defaultAppConfig.source, 'low-code.config.ts'),
+      path.resolve(defaultAppConfig.source, 'low-code.config.js'),
+      path.resolve(defaultAppConfig.source, 'low-code.config.cjs'),
       path.resolve(defaultAppConfig.temp, 'config.ts'),
       path.resolve(defaultAppConfig.temp, 'config.js'),
       path.resolve(defaultAppConfig.temp, 'config.cjs'),

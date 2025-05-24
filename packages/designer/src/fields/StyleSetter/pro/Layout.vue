@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type { FormState } from '@lowcode/form';
-import type { StyleSchema } from '@lowcode/schema';
-import { LFormContainer } from '@lowcode/form';
+import type { FormState } from '@low-code/form';
+import type { StyleSchema } from '@low-code/schema';
+import { LFormContainer } from '@low-code/form';
 import { markRaw } from 'vue';
 import Box from '../components/Box.vue';
 import { DisplayBlock, DisplayFlex, DisplayInline, DisplayInlineBlock, DisplayNone } from '../icons/display';
@@ -25,7 +25,7 @@ defineProps<{
 const emit = defineEmits(['change']);
 
 const config = {
-  type: '',
+  type: 'form',
   items: [
     {
       name: 'display',

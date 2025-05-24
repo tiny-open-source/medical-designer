@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { FormConfig, FormValue, LForm } from '@lowcode/form';
+import type { FormConfig, FormValue, LForm } from '@low-code/form';
 
 import type { Services } from '../type';
 import { computed, getCurrentInstance, inject, onMounted, ref, watchEffect } from 'vue';
@@ -10,9 +10,9 @@ defineOptions({
 const emit = defineEmits(['mounted']);
 
 const internalInstance = getCurrentInstance();
-const values = ref<FormValue>({});
+const currentSelectedElFormValues = ref<FormValue>({});
 const configForm = ref<InstanceType<typeof LForm>>();
-const curFormConfig = ref<FormConfig>();
+const currentSelectedElFormConfig = ref<FormConfig>();
 const services = inject<Services>('services');
 const node = computed(() => services?.designerService.get('node'));
 const propsPanelSize = computed(() => services?.uiService.get('propsPanelSize') || 'small');
@@ -20,13 +20,13 @@ const stage = computed(() => services?.designerService.get('stage'));
 
 async function init() {
   if (!node.value) {
-    curFormConfig.value = [];
+    currentSelectedElFormConfig.value = [];
     return;
   }
   // 先判断是容器还是纯文本
   const type = node.value.type || (node.value.items ? 'container' : 'text');
-  curFormConfig.value = (await services?.propsService.getPropsConfig(type)) || [];
-  values.value = node.value;
+  currentSelectedElFormConfig.value = (await services?.propsService.getPropsConfig(type)) || [];
+  currentSelectedElFormValues.value = node.value;
 }
 
 watchEffect(init);
@@ -61,8 +61,8 @@ defineExpose({ submit });
     :class="`lc-d-props-panel ${propsPanelSize}`"
     :popper-class="`lc-d-props-panel-popper ${propsPanelSize}`"
     :size="propsPanelSize"
-    :init-values="values"
-    :config="curFormConfig"
+    :init-values="currentSelectedElFormValues"
+    :config="currentSelectedElFormConfig"
     @change="submit"
   />
 </template>

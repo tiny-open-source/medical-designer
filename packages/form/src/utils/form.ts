@@ -22,7 +22,7 @@ export function filterFunction(lForm: FormState | undefined, config: any, props:
     config: props.config,
   });
 }
-export const display = function (lForm: FormState | undefined, config: any, props: any) {
+export function display(lForm: FormState | undefined, config: any, props: any) {
   if (typeof config === 'function') {
     return filterFunction(lForm, config, props);
   }
@@ -32,16 +32,11 @@ export const display = function (lForm: FormState | undefined, config: any, prop
   }
 
   return true;
-};
+}
 function isTableSelect(type?: string | TypeFunction) {
   return typeof type === 'string' && ['table-select', 'tableSelect'].includes(type);
 }
-const init = function (
-  lForm: FormState | undefined,
-  config: FormConfig | TabPaneConfig[] = [],
-  initValue: FormValue = {},
-  value: FormValue = {},
-) {
+function init(lForm: FormState | undefined, config: FormConfig | TabPaneConfig[] = [], initValue: FormValue = {}, value: FormValue = {}) {
   if (Array.isArray(config)) {
     config.forEach((configItem: ChildConfig | TabPaneConfig) => {
       initValueItem(lForm, configItem, initValue, value);
@@ -49,7 +44,7 @@ const init = function (
   }
 
   return value;
-};
+}
 function initValueItem(
   lForm: FormState | undefined,
   configItem: ChildConfig | TabPaneConfig,
@@ -121,7 +116,7 @@ function initItemsValue(lForm: FormState | undefined, value: FormValue, initValu
   }
 }
 
-const getDefaultValue = function (lForm: FormState | undefined, { defaultValue, type, filter, multiple }: DefaultItem) {
+function getDefaultValue(lForm: FormState | undefined, { defaultValue, type, filter, multiple }: DefaultItem) {
   if (typeof defaultValue === 'function') {
     return defaultValue(lForm);
   }
@@ -148,7 +143,7 @@ const getDefaultValue = function (lForm: FormState | undefined, { defaultValue, 
   }
 
   return '';
-};
+}
 function setValue(lForm: FormState | undefined, value: FormValue, initValue: FormValue, configItem: any) {
   const { items, name, type, checkbox } = configItem;
   // 值是数组， 有可能也有items配置，所以不能放到getDefaultValue里赋值

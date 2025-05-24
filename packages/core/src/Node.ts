@@ -1,4 +1,4 @@
-import type { EventItemConfig, MComponent, MContainer, MPage } from '@lowcode/schema';
+import type { EventItemConfig, MComponent, MContainer, MPage } from '@low-code/schema';
 
 import type App from './App';
 import type Page from './Page';

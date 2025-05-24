@@ -9,14 +9,16 @@ const DEFAULT_RIGHT_COLUMN_WIDTH = 480;
 const MIN_RIGHT_COLUMN_WIDTH = 380;
 
 const COLUMN_WIDTH_STORAGE_KEY = '$MagicEditorColumnWidthData';
+const BODY_WIDTH = globalThis.document.body.clientWidth;
 
 const defaultColumnWidth = {
   left: DEFAULT_LEFT_COLUMN_WIDTH,
-  center: globalThis.document.body.clientWidth - DEFAULT_LEFT_COLUMN_WIDTH - DEFAULT_RIGHT_COLUMN_WIDTH,
+  center: BODY_WIDTH - DEFAULT_LEFT_COLUMN_WIDTH - DEFAULT_RIGHT_COLUMN_WIDTH,
   right: DEFAULT_RIGHT_COLUMN_WIDTH,
 };
 const state = reactive<UiState>({
   uiSelectMode: false,
+  stageDragMode: false,
   showSrc: false,
   zoom: 1,
   stageContainerRect: {
@@ -81,7 +83,7 @@ class Ui extends BaseService {
     state.zoom = this.calcZoom();
   }
 
-  private setColumnWidth({ left, center, right }: SetColumnWidth) {
+  private setColumnWidth({ left, right }: SetColumnWidth) {
     const columnWidth = {
       ...toRaw(this.get('columnWidth')),
     };
@@ -93,18 +95,12 @@ class Ui extends BaseService {
       columnWidth.right = Math.max(right, MIN_RIGHT_COLUMN_WIDTH);
     }
 
-    if (!center || center === 'auto') {
-      const bodyWidth = globalThis.document.body.clientWidth;
-      // 计算中间列的宽度
-      columnWidth.center = bodyWidth - (columnWidth?.left || 0) - (columnWidth?.right || 0);
-      if (columnWidth.center <= 0) {
-        columnWidth.left = defaultColumnWidth.left;
-        columnWidth.center = defaultColumnWidth.center;
-        columnWidth.right = defaultColumnWidth.right;
-      }
-    }
-    else {
-      columnWidth.center = center;
+    // 计算中间列的宽度
+    columnWidth.center = BODY_WIDTH - (columnWidth?.left || 0) - (columnWidth?.right || 0);
+    if (columnWidth.center <= 0) {
+      columnWidth.left = defaultColumnWidth.left;
+      columnWidth.center = defaultColumnWidth.center;
+      columnWidth.right = defaultColumnWidth.right;
     }
 
     globalThis.localStorage.setItem(COLUMN_WIDTH_STORAGE_KEY, JSON.stringify(columnWidth));

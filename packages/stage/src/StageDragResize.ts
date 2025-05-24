@@ -3,7 +3,7 @@ import type StageCore from './StageCore';
 import type StageMask from './StageMask';
 import type { StageDragResizeConfig } from './types';
 
-import { removeClassNameByClassName } from '@lowcode/utils';
+import { removeClassNameByClassName } from '@low-code/utils';
 import { EventEmitter } from 'eventemitter3';
 import KeyController from 'keycon';
 import Moveable from 'moveable';
@@ -83,7 +83,6 @@ class StageDragResize extends EventEmitter {
   public select(el: HTMLElement, event?: MouseEvent): void {
     const oldTarget = this.target;
     this.target = el;
-
     if (!this.moveable || this.target !== oldTarget) {
       this.init(el);
       this.moveableHelper = MoveableHelper.create({
@@ -91,6 +90,7 @@ class StageDragResize extends EventEmitter {
         useRender: false,
         createAuto: true,
       });
+
       this.initMoveable();
     }
     else {
@@ -164,19 +164,26 @@ class StageDragResize extends EventEmitter {
         if (!this.target || !this.dragEl)
           return;
         this.dragStatus = StageDragStatus.ING;
-        this.moveableHelper?.onScale(e);
         const frame = this.moveableHelper?.getFrame(e.target);
-        this.target.style.transform = frame?.toCSSObject().transform || '';
+        frame?.set('transform', e.drag.transform);
+        this.target.style.transform = e.target.style.transform = frame?.toCSSObject().transform || '';
       })
       .on('scaleEnd', (e) => {
         this.dragStatus = StageDragStatus.END;
         const frame = this.moveableHelper?.getFrame(e.target);
-        this.emit('update', {
-          el: this.target,
-          style: {
-            transform: frame?.get('transform'),
-          },
-        });
+        if (this.target && frame) {
+          this.emit('update', {
+            data: [
+              {
+                el: this.target,
+                style: {
+                  transform: frame.get('transform'),
+                },
+              },
+            ],
+            parentEl: null,
+          });
+        }
       });
   }
 
@@ -193,19 +200,29 @@ class StageDragResize extends EventEmitter {
         if (!this.target || !this.dragEl)
           return;
         this.dragStatus = StageDragStatus.ING;
-        this.moveableHelper?.onRotate(e);
         const frame = this.moveableHelper?.getFrame(e.target);
-        this.target.style.transform = frame?.toCSSObject().transform || '';
+        frame?.set('transform', e.drag.transform);
+        this.target.style.transform = e.target.style.transform = frame?.toCSSObject().transform || '';
       })
       .on('rotateEnd', (e) => {
+        if (this.dragStatus === StageDragStatus.ING) {
+          const frame = this.moveableHelper?.getFrame(e.target);
+
+          if (this.target && frame) {
+            this.emit('update', {
+              data: [
+                {
+                  el: this.target,
+                  style: {
+                    transform: frame?.get('transform'),
+                  },
+                },
+              ],
+              parentEl: null,
+            });
+          }
+        }
         this.dragStatus = StageDragStatus.END;
-        const frame = this.moveableHelper?.getFrame(e.target);
-        this.emit('update', {
-          el: this.target,
-          style: {
-            transform: frame?.get('transform'),
-          },
-        });
       });
   }
 
@@ -259,8 +276,7 @@ class StageDragResize extends EventEmitter {
           this.ghostEl.style.top = `${frame.top + e.beforeTranslate[1]}px`;
           return;
         }
-
-        this.moveableHelper?.onDrag(e);
+        e.target.style.transform = e.transform;
 
         this.target.style.left = `${frame.left + e.beforeTranslate[0]}px`;
         this.target.style.top = `${frame.top + e.beforeTranslate[1]}px`;
@@ -298,14 +314,6 @@ class StageDragResize extends EventEmitter {
       });
   }
 
-  // 使用 requestAnimationFrame 优化拖拽动画
-  private updatePosition(x: number, y: number) {
-    requestAnimationFrame(() => {
-      this.target!.style.left = `${x}px`;
-      this.target!.style.top = `${y}px`;
-    });
-  }
-
   private bindResizeEvent(): void {
     if (!this.moveable)
       throw new Error('moveable 未初始化');
@@ -341,7 +349,12 @@ class StageDragResize extends EventEmitter {
           this.dragEl.style.height = `${height}px`;
         }
         else {
-          this.moveableHelper?.onResize(e);
+          // 蒙层拖拽方框
+          e.target.style.width = `${e.width}px`;
+          e.target.style.height = `${e.height}px`;
+          e.target.style.transform = e.drag.transform;
+
+          // 真实被拖拽的节点
           this.target.style.left = `${frame.left + beforeTranslate[0]}px`;
           this.target.style.top = `${frame.top + beforeTranslate[1]}px`;
         }
@@ -361,7 +374,7 @@ class StageDragResize extends EventEmitter {
     const { top } = this.ghostEl.getBoundingClientRect();
     const { top: oriTop } = this.target.getBoundingClientRect();
     const deltaTop = top - oriTop;
-    if (Math.abs(deltaTop) >= this.target.clientHeight / 2) {
+    if (Math.abs(deltaTop) >= this.target.offsetHeight / 2) {
       if (deltaTop > 0) {
         this.emit('sort', down(deltaTop, this.target));
       }
@@ -392,8 +405,8 @@ class StageDragResize extends EventEmitter {
 
     let left = calcValueByFontsize(doc, offset.left);
     let top = calcValueByFontsize(doc, offset.top);
-    const width = calcValueByFontsize(doc, this.target.clientWidth);
-    const height = calcValueByFontsize(doc, this.target.clientHeight);
+    const width = calcValueByFontsize(doc, this.target.offsetWidth);
+    const height = calcValueByFontsize(doc, this.target.offsetHeight);
 
     if (parentEl && this.mode === Mode.ABSOLUTE && this.dragEl) {
       const [translateX, translateY] = this.moveableHelper?.getFrame(this.dragEl).properties.transform.translate.value;
@@ -450,6 +463,7 @@ class StageDragResize extends EventEmitter {
     if (typeof this.core.config.updateDragEl === 'function') {
       this.core.config.updateDragEl(this.dragEl, el);
     }
+
     this.moveableOptions = this.getOptions({
       target: this.dragEl,
     });
@@ -512,8 +526,6 @@ class StageDragResize extends EventEmitter {
   }
 
   private canContainerHighlight() {
-    console.log(this.core.containerHighlightType);
-
     return (
       this.core.containerHighlightType === ContainerHighlightType.DEFAULT
       || (this.core.containerHighlightType === ContainerHighlightType.ALT && this.isContainerHighlight)
@@ -565,6 +577,7 @@ class StageDragResize extends EventEmitter {
         center: isAbsolute,
         middle: isAbsolute,
       },
+
       elementSnapDirections: {
         top: isAbsolute,
         right: isAbsolute,

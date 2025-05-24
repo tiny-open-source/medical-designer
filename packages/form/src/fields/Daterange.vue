@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import type { DaterangeConfig } from '../schema';
 
-import { datetimeFormatter } from '@lowcode/utils';
+import { datetimeFormatter } from '@low-code/utils';
 import { NDatePicker } from 'naive-ui';
 import { ref, watch } from 'vue';
 import { useAddField } from '../utils/useAddField';

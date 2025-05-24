@@ -189,6 +189,7 @@ defineExpose({
   getEditor() {
     return vsEditor || vsDiffEditor;
   },
+  getEditorValue,
   focus() {
     vsEditor?.focus();
     vsDiffEditor?.focus();

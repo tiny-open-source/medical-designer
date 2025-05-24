@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import type { MNode, MPage } from '@lowcode/schema';
 import type { Services } from '../../type';
-import { isPage } from '@lowcode/utils';
+import { isPage } from '@low-code/utils';
 import KeyController from 'keycon';
 import { computed, inject, onMounted, ref } from 'vue';
 import LowCodeStage from './Stage.vue';
@@ -132,7 +131,7 @@ onMounted(() => {
     .keydown([ctrl, '1'], (e) => {
       e.inputEvent.preventDefault();
       services?.uiService.set('zoom', 1);
-    }); ;
+    });
 });
 const page = computed(() => services?.designerService.get('page'));
 </script>

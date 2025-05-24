@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import type { FormValue } from '@lowcode/form';
+import type { FormValue } from '@low-code/form';
 
-import type { StyleSchema } from '@lowcode/schema';
-import { LFormContainer } from '@lowcode/form';
+import type { StyleSchema } from '@low-code/schema';
+import { LFormContainer } from '@low-code/form';
 import { computed, ref } from 'vue';
 
 withDefaults(

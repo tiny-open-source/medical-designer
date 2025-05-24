@@ -73,10 +73,14 @@ function changeHandler() {
 provide('lForm', formState);
 watch(
   [() => props.config, () => props.initValues],
-  ([config], [preConfig]) => {
-    if (!isEqual(toRaw(config), toRaw(preConfig))) {
-      initialized.value = false;
-    }
+  (
+    // [config], [preConfig]
+  ) => {
+    // console.log('🚀 ~ preConfig:', preConfig);
+    // console.log('🚀 ~ config:', config);
+    // if (!isEqual(toRaw(config), toRaw(preConfig))) {
+    //   initialized.value = false;
+    // }
 
     initValue(formState, {
       initValues: props.initValues,

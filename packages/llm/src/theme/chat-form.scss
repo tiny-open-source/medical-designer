@@ -1,0 +1,29 @@
+.lc-llm-chat-form {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+  padding: 1rem;
+  background-color: rgba(249, 250, 251, 0.5);
+  position: relative;
+  .dark & {
+    background-color: rgba(17, 24, 39, 0.5);
+  }
+
+  &__messages-container {
+    flex: 1;
+    padding: 0 0.5rem;
+    overflow-y: auto;
+  }
+
+  &__messages-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+    width: 100%;
+    padding-bottom: 140px;
+  }
+
+  &__spacer {
+    height: 100px;
+  }
+}

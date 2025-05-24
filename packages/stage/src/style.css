@@ -1,4 +1,4 @@
-.lowcode-stage-container-highlight::after {
+.low-code-stage-container-highlight::after {
   content: '';
   position: absolute;
   width: 100%;
@@ -10,6 +10,6 @@
   pointer-events: none;
 }
 
-.lowcode-ui-container.lowcode-layout-relative {
+.low-code-ui-container.low-code-layout-relative {
   min-height: 50px;
 }

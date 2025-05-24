@@ -1,0 +1,36 @@
+.lc-llm-chat-drawer {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background-color: rgba(249, 250, 251, 0.95);
+  backdrop-filter: blur(8px);
+  transition: all 0.3s ease;
+
+  .dark & {
+    background-color: rgba(17, 24, 39, 0.95);
+  }
+
+  &__code-block {
+    position: relative;
+    width: 100%;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+    .dark & {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+  }
+
+  &__code-editor {
+    height: 40vh;
+    width: 100%;
+    border-radius: 0.5rem;
+  }
+
+  &__spacer {
+    width: 100%;
+    padding-bottom: 220px;
+  }
+}

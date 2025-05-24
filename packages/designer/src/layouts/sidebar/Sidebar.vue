@@ -15,7 +15,7 @@ defineOptions({
 const props = withDefaults(defineProps<{
   data?: SideBarData;
 }>(), {
-  data: () => ({ type: 'tabs', status: '组件', items: ['component-list', 'layer'] }),
+  data: () => ({ type: 'tabs', status: '组件', items: ['component-list', 'layer', 'ai-layout'] }),
 });
 
 const activeTabName = ref(props.data?.status);

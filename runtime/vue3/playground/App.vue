@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import type { Id, MApp, MNode } from '@lowcode/schema';
-import type { LowCode, RemoveData, UpdateData } from '@lowcode/stage';
-import Core from '@lowcode/core';
-import { getNodePath } from '@lowcode/utils';
+import type { Id, MApp, MNode } from '@low-code/schema';
+import type { LowCode, RemoveData, UpdateData } from '@low-code/stage';
+import Core from '@low-code/core';
+import { getNodePath } from '@low-code/utils';
 import { computed, nextTick, provide, reactive, ref, watch } from 'vue';
 
 declare global {
   interface Window {
-    lowcode: LowCode;
+    'low-code': LowCode;
   }
 }
 
@@ -30,11 +30,11 @@ provide('app', app);
 
 watch(pageConfig, async () => {
   await nextTick();
-  const page = document.querySelector<HTMLElement>('.lowcode-ui-page');
-  page && window.lowcode.onPageElUpdate(page);
+  const page = document.querySelector<HTMLElement>('.low-code-ui-page');
+  page && window['low-code'].onPageElUpdate(page);
 });
 
-window.lowcode?.onRuntimeReady({
+window['low-code']?.onRuntimeReady({
   getApp() {
     return app;
   },

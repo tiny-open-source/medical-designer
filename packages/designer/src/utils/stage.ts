@@ -1,6 +1,6 @@
-import type { SortEventData, UpdateEventData } from '@lowcode/stage';
+import type { SortEventData, UpdateEventData } from '@low-code/stage';
 import type { StageOptions } from '../type';
-import StageCore, { GuidesType } from '@lowcode/stage';
+import StageCore, { GuidesType } from '@low-code/stage';
 
 import { computed } from 'vue';
 import editorService from '../services/designer.service';
@@ -13,21 +13,25 @@ const root = computed(() => editorService.get('root'));
 const page = computed(() => editorService.get('page'));
 const zoom = computed(() => uiService.get('zoom') || 1);
 const uiSelectMode = computed(() => uiService.get('uiSelectMode'));
+const stageDragMode = computed(() => uiService.get('stageDragMode'));
 
 const getGuideLineKey = (key: string) => `${key}_${root.value?.id}_${page.value?.id}`;
 
-export function useStage(stageOptions: StageOptions) {
+export function useStage(stageOptions: StageOptions = {}) {
   const stage = new StageCore({
     render: stageOptions.render,
     runtimeUrl: stageOptions.runtimeUrl,
-    zoom: zoom.value,
+    zoom: stageOptions.zoom ?? zoom.value,
     autoScrollIntoView: stageOptions.autoScrollIntoView,
-    isContainer: stageOptions.isContainer,
+    isContainer: stageOptions.isContainer!,
     containerHighlightClassName: stageOptions.containerHighlightClassName,
     containerHighlightDuration: stageOptions.containerHighlightDuration,
     containerHighlightType: stageOptions.containerHighlightType,
     canSelect: (el, event, stop) => {
-      const elCanSelect = stageOptions.canSelect(el);
+      const elCanSelect = stageOptions.canSelect!(el);
+      // 在拖拽组件过程中不能再往下选择，返回并触发 stage-drag
+      if (stageDragMode.value)
+        return false;
       // 在组件联动过程中不能再往下选择，返回并触发 ui-select
       if (uiSelectMode.value && elCanSelect && event.type === 'mousedown') {
         document.dispatchEvent(new CustomEvent('ui-select', { detail: el }));
@@ -39,7 +43,6 @@ export function useStage(stageOptions: StageOptions) {
     moveableOptions: stageOptions.moveableOptions,
     updateDragEl: stageOptions.updateDragEl,
   });
-
   stage.mask.setGuides([
     getGuideLineFromCache(getGuideLineKey(H_GUIDE_LINE_STORAGE_KEY)),
     getGuideLineFromCache(getGuideLineKey(V_GUIDE_LINE_STORAGE_KEY)),
@@ -57,15 +60,15 @@ export function useStage(stageOptions: StageOptions) {
     editorService.multiSelect(els.map(el => el.id));
   });
 
-  stage.on('update', (ev: UpdateEventData) => {
-    if (ev.parentEl) {
-      for (const data of ev.data) {
-        editorService.moveToContainer({ id: data.el.id, style: data.style }, ev.parentEl.id);
+  stage.on('update', (evt: UpdateEventData) => {
+    if (evt.parentEl) {
+      for (const data of evt.data) {
+        editorService.moveToContainer({ id: data.el.id, style: data.style }, evt.parentEl.id);
       }
       return;
     }
 
-    editorService.update(ev.data.map(data => ({ id: data.el.id, style: data.style })));
+    editorService.update(evt.data.map(data => ({ id: data.el.id, style: data.style })));
   });
 
   stage.on('sort', (ev: SortEventData) => {
@@ -88,6 +91,5 @@ export function useStage(stageOptions: StageOptions) {
       globalThis.localStorage.removeItem(storageKey);
     }
   });
-
   return stage;
 }

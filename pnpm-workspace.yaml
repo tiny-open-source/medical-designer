@@ -1,4 +1,6 @@
 packages:
-  - 'runtime/*'
-  - 'packages/*'
-  - 'playground'
+  - runtime/*
+  - packages/*
+  - playground
+ignoredBuiltDependencies:
+  - esbuild

@@ -1,5 +1,5 @@
-import type Core from '@lowcode/core';
-import type { MApp } from '@lowcode/schema';
+import type Core from '@low-code/core';
+import type { MApp } from '@low-code/schema';
 
 declare global {
   interface Window {

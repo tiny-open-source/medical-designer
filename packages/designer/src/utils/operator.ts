@@ -1,7 +1,7 @@
-import type { Id, MContainer, MNode } from '@lowcode/schema';
+import type { Id, MContainer, MNode } from '@low-code/schema';
 
 import type { AddMNode, PastePosition } from '../type';
-import { isPage } from '@lowcode/utils';
+import { isPage } from '@low-code/utils';
 import { isEmpty } from 'lodash-es';
 import { toRaw } from 'vue';
 
@@ -19,8 +19,9 @@ export async function beforePaste(position: PastePosition, config: MNode[]): Pro
   if (!config[0]?.style)
     return config;
   const curNode = designerService.get('node');
-  // 将数组中第一个元素的坐标作为参照点
-  const { left: referenceLeft, top: referenceTop } = config[0].style;
+  // 将数组中合适的元素的坐标作为参照点
+  const referenceLeft = Math.min(...config.map(item => item?.style?.left || 0));
+  const referenceTop = Math.min(...config.map(item => item?.style?.top || 0));
   // 坐标校准后的粘贴数据
   const pasteConfigs: MNode[] = await Promise.all(
     config.map(async (configItem: MNode): Promise<MNode> => {
@@ -35,10 +36,10 @@ export async function beforePaste(position: PastePosition, config: MNode[]): Pro
       }
 
       // 将所有待粘贴元素坐标相对于多选第一个元素坐标重新计算，以保证多选粘贴后元素间距不变
-      if (pastePosition.left && configItem.style?.left) {
-        pastePosition.left = configItem.style.left - referenceLeft + pastePosition.left;
+      if (isDefined(pastePosition.left) && isDefined(configItem.style?.left)) {
+        pastePosition.left = configItem.style!.left - referenceLeft + pastePosition.left;
       }
-      if (pastePosition.top && configItem.style?.top) {
+      if (isDefined(pastePosition.top) && isDefined(configItem.style?.top)) {
         pastePosition.top = configItem.style?.top - referenceTop + pastePosition.top;
       }
 

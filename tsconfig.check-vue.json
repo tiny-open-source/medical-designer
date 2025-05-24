@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "include": [
+    "packages/ai/src",
+    "packages/designer/src",
+    "packages/form/src",
+    "packages/runtime-ui/src"
+  ]
+}

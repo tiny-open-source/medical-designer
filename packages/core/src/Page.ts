@@ -1,4 +1,4 @@
-import type { Id, MComponent, MContainer, MPage } from '@lowcode/schema';
+import type { Id, MComponent, MContainer, MPage } from '@low-code/schema';
 
 import type App from './App';
 import Node from './Node';

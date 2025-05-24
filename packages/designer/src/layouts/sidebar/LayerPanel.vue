@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { MNode } from '@lowcode/schema';
+import type { MNode } from '@low-code/schema';
 import type { TreeDropInfo, TreeOption, TreeOverrideNodeClickBehavior, TreeOverrideNodeClickBehaviorReturn } from 'naive-ui';
 import type { AllowDrop } from 'naive-ui/es/tree/src/interface';
 import type { Ref } from 'vue';
@@ -46,14 +46,27 @@ function useStatus(tree: Ref<InstanceType<typeof NTree> | undefined>, designerSe
     if (!tree.value)
       return;
     node.value = designerService?.get('node');
-
     highlightNode.value = designerService?.get('highlightNode');
   });
 
   return {
     values: computed(() => (page.value ? [page.value] : [])),
-    expandedKeys: computed(() => (page.value ? [page.value.id] : [])),
     defaultSelectedKeys: computed(() => (node.value ? [node.value.id] : [])),
+    expandedKeys: computed(() => {
+      if (!node.value) {
+        return [];
+      }
+
+      const selectedKeys = node.value.items ? [node.value.id] : [];
+      let parent = designerService?.getParentById(node.value.id);
+      while (parent) {
+        if (parent.type === 'app')
+          break;
+        selectedKeys.push(parent.id);
+        parent = designerService?.getParentById(parent.id);
+      }
+      return selectedKeys;
+    }),
     highlightNode,
     clickNode: node,
 
@@ -64,9 +77,11 @@ const tree = ref<InstanceType<typeof NTree>>();
 const services = inject<Services>('services');
 const designerService = services!.designerService;
 const statusData = useStatus(tree, designerService);
-const { values, highlightNode, defaultSelectedKeys } = statusData;
+const { values, highlightNode, defaultSelectedKeys, expandedKeys } = statusData;
 const canHighlight = computed(
-  () => statusData.highlightNode.value?.id !== statusData.clickNode.value?.id && !clicked.value,
+  () => {
+    return statusData.highlightNode.value?.id !== statusData.clickNode.value?.id && !clicked.value;
+  },
 );
 
 function toggleClickFlag() {
@@ -211,9 +226,10 @@ function nodeProps({ option }: { option: any }) {
         children-field="items"
         :node-props="nodeProps"
         :allow-drop="allowDrop"
-        :watch-props="['defaultSelectedKeys']"
+        :watch-props="['defaultSelectedKeys', 'defaultExpandedKeys']"
         :pattern="filterText"
         :filter="filterNode"
+        :default-expanded-keys="expandedKeys"
         :override-default-node-click-behavior="override"
         :default-selected-keys="defaultSelectedKeys"
         :data="values"

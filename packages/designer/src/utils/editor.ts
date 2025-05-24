@@ -1,9 +1,9 @@
-import type { Id, MApp, MComponent, MContainer, MNode, MPage } from '@lowcode/schema';
-import type StageCore from '@lowcode/stage';
+import type { Id, MApp, MComponent, MContainer, MNode, MPage } from '@low-code/schema';
+import type StageCore from '@low-code/stage';
 import type { DesignerNodeInfo } from '../type';
-import { NodeType } from '@lowcode/schema';
+import { NodeType } from '@low-code/schema';
 
-import { getNodePath, isNumber, isPage, isPop } from '@lowcode/utils';
+import { getNodePath, isNumber, isPage, isPop } from '@low-code/utils';
 import { Layout } from '../type';
 
 export const COPY_STORAGE_KEY = '$LowCodeDesignerCopyData';

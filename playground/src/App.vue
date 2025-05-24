@@ -1,15 +1,14 @@
 <script setup lang="ts">
-import type { MenuBarData, MoveableOptions } from '@lowcode/designer';
-import type StageCore from '@lowcode/stage';
-import { LowCodeDesigner } from '@lowcode/designer';
-import { FigmaParser } from '@lowcode/dsl-resolver';
-import { NodeType } from '@lowcode/schema';
-import { asyncLoadJs } from '@lowcode/utils';
-import { CodeOutlined, FireOutlined, ImportOutlined, PlayCircleOutlined, SaveOutlined } from '@vicons/antd';
+import type { MenuBarData, MoveableOptions } from '@low-code/designer';
+import type StageCore from '@low-code/stage';
+import { parse as parseByWorker } from '@low-code/adapter';
+import { LowCodeDesigner } from '@low-code/designer';
+import { NodeType } from '@low-code/schema';
+import { asyncLoadJs } from '@low-code/utils';
+import { CodeOutlined, ImportOutlined, PlayCircleOutlined, SaveOutlined } from '@vicons/antd';
 import { dateZhCN, NConfigProvider, NDialogProvider, NMessageProvider, zhCN } from 'naive-ui';
 import serialize from 'serialize-javascript';
 import { ThemeColorConfig } from '../theme.config';
-import Ai from './components/Ai';
 import DeviceGroup from './components/DeviceGroup';
 import GlobalMessageSetup from './components/GlobalMessageSetup';
 import ImportDSL from './components/Import';
@@ -17,11 +16,9 @@ import Preview from './components/Preview';
 import componentGroupList from './configs/componentGroupList';
 import { defaultDSLConfig } from './configs/dsl';
 
-const figmaParser = new FigmaParser();
 const colorRef = ref(ThemeColorConfig);
 const previewVisible = ref(false);
 const importDialogVisible = ref(false);
-const aiPanelVisible = ref(false);
 const designer = ref<InstanceType<typeof LowCodeDesigner>>();
 const dsl = ref(defaultDSLConfig as any);
 const defaultSelectedId = computed(() => dsl.value?.items?.[0]?.id);
@@ -52,14 +49,21 @@ asyncLoadJs(
 });
 function parse(code: string) {
   try {
-    dsl.value = figmaParser.parse(typeof code === 'string' ? JSON.parse(code) : code) as any;
-    (window as any).$message.success('导入成功');
+    const loading = (window as any).$message.loading('导入中');
+    parseByWorker(code).then((res) => {
+      dsl.value = res.data;
+      loading.destroy();
+      (window as any).$message.success('导入成功');
+    }).catch((e) => {
+      console.error(e);
+      loading.destroy();
+      (window as any).$message.error(`导入失败，${e.message}`);
+    });
   }
   catch (e: any) {
     (window as any).$message.error(`导入失败，${e.message}`);
   }
 }
-const llmOutputDSL = ref('');
 
 function moveableOptions(core?: StageCore): MoveableOptions {
   const options: MoveableOptions = {};
@@ -79,6 +83,13 @@ function moveableOptions(core?: StageCore): MoveableOptions {
   options.resizable = !isPage;
   options.rotatable = !isPage;
 
+  // 双击后在弹层中编辑时，根组件不能拖拽
+  if (core?.selectedDom?.parentElement?.classList.contains('low-code-sub-stage-wrap')) {
+    options.draggable = false;
+    options.resizable = false;
+    options.rotatable = false;
+  }
+
   return options;
 }
 window.onbeforeunload = function () {
@@ -87,17 +98,6 @@ window.onbeforeunload = function () {
   }
 };
 
-const dslSerialized = computed(() => {
-  return serialize(toRaw(dsl.value), {
-    space: 2,
-    unsafe: true,
-  }).replace(/"(\w+)":\s/g, '$1: ');
-});
-
-const dslEvaled = computed(() => {
-  // eslint-disable-next-line no-eval
-  return eval(`(${dslSerialized.value})`);
-});
 function save() {
   localStorage.setItem(
     'lowcodeDSL',
@@ -132,14 +132,6 @@ const menu: MenuBarData = {
   center: ['delete', 'undo', 'redo', 'guides', 'rule', 'zoom'],
   right: [
     '/',
-    {
-      type: 'button',
-      text: '使用AI优化',
-      icon: FireOutlined,
-      handler: async () => {
-        aiPanelVisible.value = true;
-      },
-    },
     {
       type: 'button',
       text: '导入',
@@ -213,11 +205,11 @@ const menu: MenuBarData = {
             <DeviceGroup v-model="stageRectStr" class="device-group" />
           </template>
         </LowCodeDesigner>
-        <Ai
-          v-model:show="aiPanelVisible" :code="dslSerialized" @update:code="(dsl) => llmOutputDSL = dsl" @save="() => {
+        <!-- <l-form-llm-chat
+          v-model:show="aiPanelVisible" :code="dslSerialized" @update:code="(dsl: any) => llmOutputDSL = dsl" @save="() => {
             dsl = dslEvaled;
           }"
-        />
+        /> -->
         <Preview v-if="designer?.designerService.get('page')" v-model:show="previewVisible" :src="`${VITE_RUNTIME_PATH}/page/index.html?localPreview=1&page=${designer?.designerService.get('page')?.id}`" />
         <ImportDSL v-model:show="importDialogVisible" @save="parse" />
         <GlobalMessageSetup />

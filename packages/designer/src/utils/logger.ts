@@ -7,21 +7,21 @@ function createLogger(logger: (...args: any[]) => void) {
   };
 }
 export const log = createLogger((...args: any[]) => {
-  console.log('lowcode-designer: ', ...args);
+  console.log('low-code-designer: ', ...args);
 });
 
 export const info = createLogger((...args: any[]) => {
-  console.info('lowcode-designer: ', ...args);
+  console.info('low-code-designer: ', ...args);
 });
 
 export const warn = createLogger((...args: any[]) => {
-  console.warn('lowcode-designer: ', ...args);
+  console.warn('low-code-designer: ', ...args);
 });
 
 export const debug = createLogger((...args: any[]) => {
-  console.debug('lowcode-designer: ', ...args);
+  console.debug('low-code-designer: ', ...args);
 });
 
 export const error = createLogger((...args: any[]) => {
-  console.error('lowcode-designer: ', ...args);
+  console.error('low-code-designer: ', ...args);
 });

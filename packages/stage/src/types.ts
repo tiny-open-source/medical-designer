@@ -1,6 +1,6 @@
-import type Core from '@lowcode/core';
+import type Core from '@low-code/core';
 
-import type { Id, MApp, MContainer, MNode } from '@lowcode/schema';
+import type { Id, MApp, MContainer, MNode } from '@low-code/schema';
 import type { MoveableOptions } from 'moveable';
 
 import type { GuidesType } from './const';
@@ -26,7 +26,7 @@ export interface StageCoreConfig {
 
   /** runtime 的HTML地址，可以是一个HTTP地址，如果和编辑器不同域，需要设置跨域，也可以是一个相对或绝对路径 */
   runtimeUrl?: string;
-  render?: (renderer: StageCore) => Promise<HTMLElement> | HTMLElement;
+  render?: (stage: StageCore) => HTMLDivElement | void | Promise<HTMLDivElement | void>;
   autoScrollIntoView?: boolean;
   updateDragEl?: (el: HTMLDivElement, target: HTMLElement) => void;
 }
@@ -57,7 +57,6 @@ export interface StageDragResizeConfig {
   core: StageCore;
   container: HTMLElement;
   mask: StageMask;
-
 }
 
 export type Rect = {
@@ -132,7 +131,7 @@ export interface LowCode {
 }
 
 export interface RuntimeWindow extends Window {
-  lowcode: LowCode;
+  'low-code': LowCode;
 }
 
 export interface StageHighlightConfig {

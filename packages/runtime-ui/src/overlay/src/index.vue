@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type Core from '@lowcode/core';
-import type { MNode } from '@lowcode/schema';
+import type Core from '@low-code/core';
+import type { MNode } from '@low-code/schema';
 import { ref } from 'vue';
 import LowCodeRuntimeUiComponent from '../../Component.vue';
 import { useApp } from '../../use-app';
@@ -52,7 +52,7 @@ defineExpose({
   <div
     v-if="visible"
     :id="`${config.id || ''}`"
-    class="lowcode-ui-overlay"
+    class="low-code-ui-overlay"
     :style="style"
   >
     <slot />

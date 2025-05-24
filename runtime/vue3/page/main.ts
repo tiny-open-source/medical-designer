@@ -1,11 +1,12 @@
-import Core from '@lowcode/core';
-import { getUrlParam } from '@lowcode/utils';
+import Core from '@low-code/core';
+import { getUrlParam } from '@low-code/utils';
 import { createApp } from 'vue';
-import components from '../.lowcode/comp-entry';
-import plugins from '../.lowcode/plugin-entry';
-
+import components from '../.low-code/comp-entry';
+import plugins from '../.low-code/plugin-entry';
 import { getLocalConfig } from '../utils';
+
 import App from './App.vue';
+import '@low-code/core/resetcss.css';
 
 const vm = createApp(App);
 

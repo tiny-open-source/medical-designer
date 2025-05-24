@@ -1,7 +1,8 @@
 <script setup lang="ts">
+import type { PropType } from 'vue';
 import type { FormState, RowConfig } from '../schema';
-import { NButton, NFlex } from 'naive-ui';
-import { inject, type PropType } from 'vue';
+import { NFlex } from 'naive-ui';
+import { inject } from 'vue';
 import Col from './Col.vue';
 
 defineOptions({

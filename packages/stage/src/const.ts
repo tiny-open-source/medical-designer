@@ -7,9 +7,9 @@ export const DRAG_EL_ID_PREFIX = 'drag_el_';
 /** 高亮时需要在蒙层中创建一个占位节点，该节点的id前缀 */
 export const HIGHLIGHT_EL_ID_PREFIX = 'highlight_el_';
 
-export const CONTAINER_HIGHLIGHT_CLASS = 'lowcode-stage-container-highlight';
+export const CONTAINER_HIGHLIGHT_CLASS = 'low-code-stage-container-highlight';
 
-export const PAGE_CLASS = 'lowcode-ui-page';
+export const PAGE_CLASS = 'low-code-ui-page';
 
 /** 默认放到缩小倍数 */
 export const DEFAULT_ZOOM = 1;
@@ -53,4 +53,4 @@ export enum Mode {
 }
 
 /** 选中节点的class name */
-export const SELECTED_CLASS = 'tmagic-stage-selected-area';
+export const SELECTED_CLASS = 'low-code-stage-selected-area';

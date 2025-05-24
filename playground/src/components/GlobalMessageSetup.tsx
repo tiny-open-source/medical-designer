@@ -5,6 +5,6 @@ export default defineComponent({
   name: 'GlobalMessageSetup',
   setup() {
     (window as any).$message = useMessage();
-    return <div></div>;
+    return () => <div></div>;
   },
 });

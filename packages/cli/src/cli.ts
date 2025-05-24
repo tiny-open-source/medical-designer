@@ -25,11 +25,11 @@ export function cli(defaultAppConfig: UserConfig): void {
   allowTs();
 
   // create cac instance
-  const program = cac('lowcode');
+  const program = cac('low-code');
 
   // display core version and cli version
   const versionCli = require('../package.json').version;
-  program.version(`lowcode/cli@${versionCli}`);
+  program.version(`low-code/cli@${versionCli}`);
 
   // display help message
   program.help();

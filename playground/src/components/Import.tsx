@@ -1,7 +1,7 @@
-import { CodeEditor } from '@lowcode/designer';
+import { CodeEditor } from '@low-code/designer';
 import { useDialog } from 'naive-ui';
 import { defineComponent } from 'vue';
-import { mockFigmaJson } from './figma-json';
+import mockFigmaJson from './FigmaJSON.json?raw';
 
 export default defineComponent({
   name: 'Preview',
@@ -13,24 +13,23 @@ export default defineComponent({
   },
   emit: ['update:show'],
   setup(props, { emit }) {
+    const codeEditorRef = ref<InstanceType<typeof CodeEditor>>();
     const dialog = useDialog();
-    const values = ref(mockFigmaJson as any);
-    function save(value: string) {
-      values.value = value;
-    }
+    const values = shallowRef(mockFigmaJson as any);
+
     watch(
       () => props.show,
       (value) => {
         if (value) {
-          dialog.info({
-            title: '从蓝湖导入FigmaJSON',
+          dialog.create({
+            title: '从蓝湖导入FigmaJSON(示例)',
             style: { width: 'auto' },
             content: () => (
               <CodeEditor
+                ref={codeEditorRef}
                 style="height: 800px; width: 900px;"
                 init-values={values.value}
-                language="javascript"
-                onSave={save}
+                language="json"
               />
             ),
             onAfterLeave: () => {
@@ -38,7 +37,7 @@ export default defineComponent({
             },
             positiveText: '解析并导入',
             onPositiveClick: () => {
-              emit('save', values.value);
+              emit('save', codeEditorRef.value?.getEditorValue());
             },
           });
         }

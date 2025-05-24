@@ -1,7 +1,7 @@
 export default {
   items: [],
   style: {
-    width: '100%',
-    height: '100%',
+    width: '1024',
+    height: '600',
   },
 };

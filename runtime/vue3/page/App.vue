@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type Core from '@lowcode/core';
+import type Core from '@low-code/core';
 import { inject, reactive } from 'vue';
 
 const app = inject<Core | undefined>('app');

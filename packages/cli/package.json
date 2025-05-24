@@ -1,5 +1,5 @@
 {
-  "name": "@lowcode/cli",
+  "name": "@low-code/cli",
   "type": "commonjs",
   "version": "1.1.2",
   "description": "",
@@ -9,7 +9,7 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "bin": {
-    "lowcode": "bin/lowcode.js"
+    "low-code": "bin/low-code.js"
   },
   "files": [
     "bin",
@@ -27,9 +27,9 @@
     "cac": "^6.7.14",
     "chalk": "^4.1.0",
     "chokidar": "^4.0.3",
-    "esbuild": "^0.25.0",
+    "esbuild": "^0.25.2",
     "fs-extra": "^11.3.0",
-    "recast": "^0.23.9",
+    "recast": "^0.23.11",
     "tslib": "^2.8.1"
   },
   "devDependencies": {

@@ -68,7 +68,7 @@ function getInitOption() {
 }
 
 const modelValue = computed({
-  get: () => props.model[modelName.value],
+  get: () => props.model[modelName.value] || void 0,
   set: (value) => {
     emit('change', value);
   },

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { StyleSchema } from '@lowcode/schema';
+import type { StyleSchema } from '@low-code/schema';
 import { NCollapse, NCollapseItem } from 'naive-ui';
 import { Background, Border, Font, Layout, Position } from './pro';
 

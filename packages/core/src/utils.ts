@@ -26,3 +26,20 @@ export function fillBackgroundImage(value: string) {
   return value;
 }
 export const isNumber = (value: string) => /^-?\d+(?:\.\d+)?$/.test(value);
+export function getTransform(value: Record<string, string>) {
+  if (!value)
+    return [];
+
+  const transform = Object.entries(value).map(([transformKey, transformValue]) => {
+    if (!transformValue.trim())
+      return '';
+    if (transformKey === 'rotate' && isNumber(transformValue)) {
+      transformValue = `${transformValue}deg`;
+    }
+
+    return `${transformKey}(${transformValue})`;
+  });
+
+  const values = transform.join(' ');
+  return !values.trim() ? 'none' : values;
+}

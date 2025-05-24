@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import type { ChildConfig, FormState, RowConfig } from '../schema';
-import { computed, inject, type PropType } from 'vue';
+import type { PropType } from 'vue';
+import type { ChildConfig, FormState } from '../schema';
+import { computed, inject } from 'vue';
 import { display as displayFunction } from '../utils/form';
 
 defineOptions({

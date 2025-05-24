@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { MPage } from '@lowcode/schema';
+import type { MPage } from '@low-code/schema';
 import { computed } from 'vue';
 import LowCodeRuntimeUiComponent from '../../Component.vue';
 import { useApp } from '../../use-app';
@@ -26,7 +26,7 @@ const display = computed(() => {
   <div
     v-if="display"
     :id="`${config.id || ''}`"
-    :class="`lowcode-ui-container lowcode-layout-${config.className ? ` ${config.className}` : ''}`"
+    :class="`low-code-ui-container low-code-layout-${config.className ? ` ${config.className}` : ''}`"
     :style="style"
   >
     <slot />

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { StyleSchema } from '@lowcode/schema';
-import { LFormContainer } from '@lowcode/form';
+import type { StyleSchema } from '@low-code/schema';
+import { LFormContainer } from '@low-code/form';
 import { RadiusBottomleftOutlined, RadiusBottomrightOutlined, RadiusUpleftOutlined, RadiusUprightOutlined } from '@vicons/antd';
 import { markRaw } from 'vue';
 import Border from '../components/Border.vue';

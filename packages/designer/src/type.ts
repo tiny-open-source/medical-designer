@@ -1,12 +1,13 @@
-import type { FormConfig } from '@lowcode/form';
-import type { Id, MApp, MContainer, MNode, MPage } from '@lowcode/schema';
-import type StageCore from '@lowcode/stage';
-import type { ContainerHighlightType, MoveableOptions } from '@lowcode/stage';
+import type { FormConfig } from '@low-code/form';
+import type { Id, MApp, MContainer, MNode, MPage } from '@low-code/schema';
+import type StageCore from '@low-code/stage';
+import type { ContainerHighlightType, MoveableOptions } from '@low-code/stage';
 import type { Component } from 'vue';
 import type { ComponentListService } from './services/component-list.service';
 import type { DesignerService } from './services/designer.service';
 import type { HistoryService } from './services/history.service';
 import type { PropsService } from './services/props.service';
+import type { StageOverlayService } from './services/stage-overlay.service';
 import type { StorageService } from './services/storage.service';
 import type { UiService } from './services/ui.service';
 
@@ -20,21 +21,23 @@ export interface Services {
   propsService: PropsService;
   componentListService: ComponentListService;
   storageService: StorageService;
+  stageOverlayService: StageOverlayService;
 }
 
 export interface StageOptions {
-  runtimeUrl: string;
-  autoScrollIntoView: boolean;
-  containerHighlightClassName: string;
-  containerHighlightDuration: number;
-  containerHighlightType: ContainerHighlightType;
+  runtimeUrl?: string;
+  autoScrollIntoView?: boolean;
+  containerHighlightClassName?: string;
+  containerHighlightDuration?: number;
+  containerHighlightType?: ContainerHighlightType;
 
-  render: () => HTMLDivElement;
-  moveableOptions: MoveableOptions | ((core?: StageCore) => MoveableOptions);
-  isContainer: (el: HTMLElement) => boolean | Promise<boolean>;
-  canSelect: (el: HTMLElement) => boolean | Promise<boolean>;
+  render?: (stage: StageCore) => HTMLDivElement | void | Promise<HTMLDivElement | void>;
+  moveableOptions?: MoveableOptions | ((core?: StageCore) => MoveableOptions);
+  isContainer?: (el: HTMLElement) => boolean | Promise<boolean>;
+  canSelect?: (el: HTMLElement) => boolean | Promise<boolean>;
 
-  updateDragEl: (el: HTMLDivElement) => void;
+  updateDragEl?: (el: HTMLDivElement) => void;
+  zoom?: number;
 }
 export interface DesignerNodeInfo {
   node: MNode | null;
@@ -77,6 +80,8 @@ export interface StoreState {
 export interface UiState {
   /** 当前点击画布是否触发选中，true: 不触发，false: 触发，默认为false */
   uiSelectMode: boolean;
+  /** 当前点击画布是否触发拖拽，true: 不触发，false: 触发，默认为false */
+  stageDragMode: boolean;
   /** 是否显示整个配置源码， true: 显示， false: 不显示，默认为false */
   showSrc: boolean;
   /** 画布显示放大倍数，默认为 1 */
@@ -271,4 +276,15 @@ export interface ScrollViewerEvent {
   scrollTop: number;
   scrollHeight: number;
   scrollWidth: number;
+}
+
+export interface StageOverlayState {
+  wrapDiv: HTMLDivElement;
+  sourceEl: HTMLElement | null;
+  contentEl: HTMLElement | null;
+  stage: StageCore | null;
+  stageOptions: StageOptions | null;
+  wrapWidth: number;
+  wrapHeight: number;
+  stageOverlayVisible: boolean;
 }

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type { GetColumnWidth, MenuBarData, MenuButton, MenuComponent, MenuItem, Services } from '../type';
-import { NodeType } from '@lowcode/schema';
+import { NodeType } from '@low-code/schema';
 
 import { ArrowLeftOutlined, ArrowRightOutlined, BorderInnerOutlined, BorderOuterOutlined, DeleteOutlined, FullscreenOutlined, TableOutlined, ZoomInOutlined, ZoomOutOutlined } from '@vicons/antd';
 

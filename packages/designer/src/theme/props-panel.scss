@@ -1,6 +1,6 @@
 @use "./common/variables";
 .#{variables.$namespace}-props-panel {
-  padding: 0 10px;
+  padding: 0 0 0 10px;
   height: 100%;
   &.small {
     .el-form-item__label {

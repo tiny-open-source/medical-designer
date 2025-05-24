@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type Core from '@lowcode/core';
-import type { MComponent } from '@lowcode/schema';
+import type Core from '@low-code/core';
+import type { MComponent } from '@low-code/schema';
 import { computed, getCurrentInstance, inject, provide } from 'vue';
 
 const props = defineProps<{
@@ -24,6 +24,6 @@ const display = computed(() => {
 
 <template>
   <component
-    :is="tagName" v-if="display" :id="config.id" :style="style" :class="`lowcode-ui-component${config.className ?? ''}`" :config="config"
+    :is="tagName" v-if="display" :id="config.id" :style="style" :class="`low-code-ui-component${config.className ?? ''}`" :config="config"
   />
 </template>

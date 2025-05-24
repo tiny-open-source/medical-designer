@@ -1,4 +1,4 @@
-import type { FormConfig, FormState } from '@lowcode/form';
+import type { FormConfig, FormState } from '@low-code/form';
 import designerService from '../services/designer.service';
 import eventsService from '../services/events.service';
 
@@ -157,6 +157,16 @@ export function fillConfig(config: FormConfig = []): FormConfig {
               name: 'created',
               text: 'created',
               formTitle: 'created',
+            },
+          ],
+        },
+        {
+          title: 'ai助手',
+          labelWidth: '80px',
+          items: [
+            {
+              type: 'llm-chat',
+              items: [],
             },
           ],
         },

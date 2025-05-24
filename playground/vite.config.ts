@@ -1,3 +1,4 @@
+import type { Plugin } from 'vite';
 import path from 'node:path';
 import { fileURLToPath, URL } from 'node:url';
 import vue from '@vitejs/plugin-vue';
@@ -11,7 +12,7 @@ import vueDevTools from 'vite-plugin-vue-devtools';
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/medical-designer/playground/',
+  base: '/low-code-platform/playground/',
   css: {
     preprocessorOptions: {
       scss: {
@@ -26,13 +27,13 @@ export default defineConfig({
       '@vueuse/core',
     ],
     viteOptimizeDeps: true,
-  }), Components({
+  }) as Plugin, Components({
     resolvers: [AntDesignVueResolver()],
-  })],
+  }) as Plugin],
   resolve: {
     alias: [
       { find: '@', replacement: fileURLToPath(new URL('src', import.meta.url)) },
-      { find: /@lowcode\/(.*)/, replacement: path.join(__dirname, '../packages/$1/src') },
+      { find: /@low-code\/(.*)/, replacement: path.join(__dirname, '../packages/$1/src') },
     ],
   },
   optimizeDeps: {
@@ -48,9 +49,9 @@ export default defineConfig({
   },
   server: {
     port: 10001,
-    open: '/medical-designer/playground/',
+    open: '/low-code-platform/playground/',
     proxy: {
-      '^/medical-designer/playground/runtime/vue3': {
+      '^/low-code-platform/playground/runtime/vue3': {
         target: 'http://localhost:10002',
         changeOrigin: true,
         prependPath: false,

@@ -1,5 +1,5 @@
-import type { MNode } from '@lowcode/schema';
-import { NodeType } from '@lowcode/schema';
+import type { MNode } from '@low-code/schema';
+import { NodeType } from '@low-code/schema';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { set as objectSet } from 'lodash-es';

@@ -1,4 +1,4 @@
-import type { MApp } from '@lowcode/schema';
+import type { MApp } from '@low-code/schema';
 
 export function getLocalConfig(): MApp[] {
   const configStr = localStorage.getItem('lowcodeDSL');

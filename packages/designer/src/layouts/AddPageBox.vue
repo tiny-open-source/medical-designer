@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Services } from '../type';
 
-import { NodeType } from '@lowcode/schema';
+import { NodeType } from '@low-code/schema';
 
 import { PlusCircleOutlined } from '@vicons/antd';
 import { NIcon } from 'naive-ui';

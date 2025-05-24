@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "stripInternal": true
+  },
+  "include": [
+    "packages/designer/src",
+    "packages/form/src",
+    "packages/ai/src",
+    "packages/runtime-ui/src"
+  ]
+}
