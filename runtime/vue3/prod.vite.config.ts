@@ -29,7 +29,7 @@ export default defineConfig(({ mode }) => {
   }
 
   if (['page', 'playground'].includes(mode)) {
-    const base = `/low-code-platform/playground/runtime/vue3/${mode}`;
+    const base = `/medical-designer/playground/runtime/vue3/${mode}`;
     const outDir = path.resolve(process.cwd(), `../../playground/public/runtime/vue3/${mode}`);
     return {
       plugins: [
