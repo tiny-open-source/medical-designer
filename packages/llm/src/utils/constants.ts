@@ -3,7 +3,8 @@
  */
 export enum ModelType {
   MAIN = 'mainModel',
-  VISION = 'visionModel',
+  // VISION = 'visionModel',
+  INTENTION_INFERENCE = 'intentionInferenceModel',
 }
 
 /**
@@ -11,7 +12,8 @@ export enum ModelType {
  */
 export const MODEL_TYPE_LABELS = {
   [ModelType.MAIN]: '主模型',
-  [ModelType.VISION]: '视觉识别模型',
+  // [ModelType.VISION]: '视觉识别模型',
+  [ModelType.INTENTION_INFERENCE]: '意图推理模型',
 };
 
 /**
@@ -19,5 +21,6 @@ export const MODEL_TYPE_LABELS = {
  */
 export const MODEL_TYPE_ICONS = {
   [ModelType.MAIN]: 'EditOutlined',
-  [ModelType.VISION]: 'EyeOutlined',
+  // [ModelType.VISION]: 'EyeOutlined',
+  [ModelType.INTENTION_INFERENCE]: 'RobotOutlined',
 };

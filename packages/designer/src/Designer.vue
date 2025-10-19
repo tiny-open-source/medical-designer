@@ -114,7 +114,7 @@ const services: Services = {
 watch(
   modelValue,
   (n) => {
-    designerService.set('root', toRaw(n) || null);
+    designerService.set('root', n || null);
   },
   {
     immediate: true,

@@ -15,7 +15,6 @@ import {
   NInput,
   NSelect,
   NSpace,
-  NSwitch,
   NTabPane,
   NTabs,
   useMessage,
@@ -308,6 +307,15 @@ export default defineComponent({
         if (model) {
           multiModelConfig.value[modelType] = { ...val, ...model };
         }
+        else {
+          // 如果没有选择模型，则只保存配置
+          multiModelConfig.value[modelType] = {
+            ...val,
+            label: '',
+            name: '',
+            value: '',
+          };
+        }
 
         message.success(`${MODEL_TYPE_LABELS[modelType]}配置已保存`);
         return true;
@@ -321,7 +329,7 @@ export default defineComponent({
 
     // 渲染设置界面
     const renderSettings = () => (
-      <NTabs type="line" animated value={activeTab.value} onUpdateValue={value => activeTab.value = value}>
+      <NTabs type="segment" animated value={activeTab.value} onUpdateValue={value => activeTab.value = value}>
         <NTabPane
           name={ModelType.MAIN}
           tab={(
@@ -413,11 +421,11 @@ export default defineComponent({
           </div>
         </NTabPane>
         <NTabPane
-          name={ModelType.VISION}
+          name={ModelType.INTENTION_INFERENCE}
           tab={(
             <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
               <NIcon><EyeOutlined /></NIcon>
-              {MODEL_TYPE_LABELS[ModelType.VISION]}
+              {MODEL_TYPE_LABELS[ModelType.INTENTION_INFERENCE]}
             </div>
           )}
         >
@@ -468,15 +476,6 @@ export default defineComponent({
                   </NSelect>
                 </NFormItem>
 
-                <NFormItem label="启用视觉能力" path="visionEnabled">
-                  <NSwitch
-                    value={!!formValues.value.visionEnabled}
-                    onUpdateValue={value => formValues.value.visionEnabled = value}
-                  />
-                </NFormItem>
-
-                <NDivider />
-
                 <NDivider />
                 <div class="prompt-template-config">
 
@@ -521,6 +520,7 @@ export default defineComponent({
       modal.create({
         preset: 'dialog',
         title: '模型配置',
+        type: 'default',
         style: {
           width: '800px',
         },

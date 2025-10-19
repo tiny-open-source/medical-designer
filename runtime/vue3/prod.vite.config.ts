@@ -3,7 +3,6 @@ import path from 'node:path';
 import process from 'node:process';
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
-import externalGlobals from 'rollup-plugin-external-globals';
 import { defineConfig } from 'vite';
 
 export default defineConfig(({ mode }) => {
@@ -35,7 +34,6 @@ export default defineConfig(({ mode }) => {
       plugins: [
         vue(),
         vueJsx(),
-        externalGlobals({ vue: 'Vue' }, { exclude: [`./${mode}/index.html`] }),
       ],
 
       root: `./${mode}/`,

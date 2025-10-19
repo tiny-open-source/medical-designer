@@ -9,11 +9,11 @@ import type {
 import type { ChatResult } from '@langchain/core/outputs';
 import type {
   ChatOpenAICallOptions,
-  OpenAIChatInput,
+  OpenAIChatInput as OldOpenAIChatInput,
   OpenAICoreRequestOptions,
 } from '@langchain/openai';
 import type { ClientOptions } from 'openai';
-import type { LegacyOpenAIInput } from './types';
+import type { LegacyOpenAIInput } from './types.js';
 import {
   BaseChatModel,
 } from '@langchain/core/language_models/chat_models';
@@ -42,11 +42,17 @@ import {
   getEndpoint,
 } from '@langchain/openai';
 import { OpenAI as OpenAIClient } from 'openai';
-import { CustomAIMessageChunk } from './CustomAIMessageChunk';
-import { wrapOpenAIClientError } from './utils/openai';
+import { CustomAIMessageChunk } from './CustomAIMessageChunk.js';
+import { wrapOpenAIClientError } from './utils/openai.js';
 
 type OpenAIRoleEnum = 'system' | 'assistant' | 'user' | 'function' | 'tool';
+type ReasoningEffort = 'low' | 'medium' | 'high' | null;
 
+interface ReasoningEffortOptions {
+  reasoning_effort?: ReasoningEffort;
+}
+
+type OpenAIChatInput = OldOpenAIChatInput & ReasoningEffortOptions;
 function extractGenericMessageCustomRole(message: ChatMessage) {
   if (
     message.role !== 'system'
@@ -87,9 +93,8 @@ function openAIResponseToChatMessage(
   switch (message.role) {
     case 'assistant':
       return new AIMessage(message.content || '', {
-        // function_call: message.function_call,
-        // tool_calls: message.tool_calls
-        // reasoning_content: message?.reasoning_content || null
+        function_call: message.function_call,
+        tool_calls: message.tool_calls,
       });
     default:
       return new ChatMessage(message.content || '', message.role ?? 'unknown');
@@ -99,17 +104,18 @@ function _convertDeltaToMessageChunk(
   delta: Record<string, any>,
   defaultRole?: OpenAIRoleEnum,
 ) {
+  console.log('🚀 ~ delta:', delta);
   const role = delta.role ?? defaultRole;
   const content = delta.content ?? '';
   const reasoning_content: string | undefined | null
         = delta?.reasoning_content ?? undefined;
   let additional_kwargs;
-  if (delta.function_call) {
+  if (delta?.function_call) {
     additional_kwargs = {
       function_call: delta.function_call,
     };
   }
-  else if (delta.tool_calls) {
+  else if (delta?.tool_calls) {
     additional_kwargs = {
       tool_calls: delta.tool_calls,
     };
@@ -153,12 +159,36 @@ function _convertDeltaToMessageChunk(
 function convertMessagesToOpenAIParams(messages: any[]) {
   // TODO: Function messages do not support array content, fix cast
   return messages.map((message) => {
-    const completionParam: { role: string; content: string; name?: string } = {
+    const completionParam: {
+      role: string;
+      content: string;
+      name?: string;
+      tool_calls?: any[];
+      tool_call_id?: string;
+      function_call?: any;
+    } = {
       role: messageToOpenAIRole(message),
       content: message.content,
     };
+
+    // 保留 name 字段
     if (message.name != null) {
       completionParam.name = message.name;
+    }
+
+    // 保留工具调用相关字段
+    if (message.additional_kwargs?.tool_calls) {
+      completionParam.tool_calls = message.additional_kwargs.tool_calls;
+    }
+
+    // 保留工具调用 ID（用于 ToolMessage）
+    if (message.tool_call_id != null) {
+      completionParam.tool_call_id = message.tool_call_id;
+    }
+
+    // 保留函数调用字段（旧格式支持）
+    if (message.additional_kwargs?.function_call) {
+      completionParam.function_call = message.additional_kwargs.function_call;
     }
 
     return completionParam;
@@ -222,7 +252,10 @@ export class CustomChatOpenAI<
   azureOpenAIBasePath?: string;
 
   organization?: string;
+
+  reasoning_effort?: ReasoningEffort | null;
   // @ts-ignore
+
   protected client: OpenAIClient;
 
   protected clientConfig: ClientOptions;
@@ -266,10 +299,10 @@ export class CustomChatOpenAI<
   constructor(
     fields?: Partial<OpenAIChatInput> &
       BaseChatModelParams & {
-        configuration?: ClientOptions & LegacyOpenAIInput;
+        configuration?: ClientOptions & LegacyOpenAIInput & ReasoningEffortOptions;
       },
     /** @deprecated */
-    configuration?: ClientOptions & LegacyOpenAIInput,
+    configuration?: ClientOptions & LegacyOpenAIInput & ReasoningEffortOptions,
   ) {
     super(fields ?? {});
     Object.defineProperty(this, 'lc_serializable', {
@@ -282,31 +315,31 @@ export class CustomChatOpenAI<
       enumerable: true,
       configurable: true,
       writable: true,
-      value: 1,
+      value: void 0,
     });
     Object.defineProperty(this, 'topP', {
       enumerable: true,
       configurable: true,
       writable: true,
-      value: 1,
+      value: void 0,
     });
     Object.defineProperty(this, 'frequencyPenalty', {
       enumerable: true,
       configurable: true,
       writable: true,
-      value: 0,
+      value: void 0,
     });
     Object.defineProperty(this, 'presencePenalty', {
       enumerable: true,
       configurable: true,
       writable: true,
-      value: 0,
+      value: void 0,
     });
     Object.defineProperty(this, 'n', {
       enumerable: true,
       configurable: true,
       writable: true,
-      value: 1,
+      value: void 0,
     });
     Object.defineProperty(this, 'logitBias', {
       enumerable: true,
@@ -440,6 +473,7 @@ export class CustomChatOpenAI<
     this.stop = fields?.stop;
     this.user = fields?.user;
     this.streaming = fields?.streaming ?? false;
+    this.reasoning_effort = fields?.reasoning_effort ?? null;
     this.clientConfig = {
       apiKey: this.openAIApiKey,
       organization: this.organization,
@@ -488,6 +522,11 @@ export class CustomChatOpenAI<
       tool_choice: options?.tool_choice,
       response_format: options?.response_format,
       seed: options?.seed,
+      reasoning: this.reasoning_effort
+        ? {
+            method: this.reasoning_effort,
+          }
+        : undefined,
       ...this.modelKwargs,
     };
     return params;
@@ -509,11 +548,13 @@ export class CustomChatOpenAI<
     runManager?: CallbackManagerForLLMRun,
   ): AsyncGenerator<ChatGenerationChunk> {
     const messagesMapped = convertMessagesToOpenAIParams(messages);
+
     const params = {
       ...this.invocationParams(options),
       messages: messagesMapped,
       stream: true,
     };
+
     let defaultRole;
     // @ts-ignore
     const streamIterable = await this.completionWithRetry(params, options);
@@ -526,8 +567,10 @@ export class CustomChatOpenAI<
       if (!delta) {
         continue;
       }
+
       // @ts-ignore
       const chunk = _convertDeltaToMessageChunk(delta, defaultRole);
+
       defaultRole = delta.role ?? defaultRole;
       const newTokenIndices = {
         // @ts-ignore
@@ -892,14 +935,23 @@ export class CustomChatOpenAI<
       let functionName = name ?? 'extract';
       // Is function calling
 
+      let openAIFunctionDefinition;
       if (
         typeof schema.name === 'string'
         && typeof schema.parameters === 'object'
         && schema.parameters != null
       ) {
+        openAIFunctionDefinition = schema;
         functionName = schema.name;
       }
-      llm = this.bind({});
+      else {
+        openAIFunctionDefinition = {
+          name: schema.title ?? functionName,
+          description: schema.description ?? '',
+          parameters: schema,
+        };
+      }
+      llm = this.bind(openAIFunctionDefinition);
       outputParser = new JsonOutputKeyToolsParser({
         returnSingle: true,
         keyName: functionName,

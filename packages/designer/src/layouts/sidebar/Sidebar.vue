@@ -44,7 +44,7 @@ const dataConfigs = computed(() => {
         return {
           type: 'component',
           icon: CheckSquareOutlined,
-          text: '已选组件',
+          text: '树',
           component: LayerPanel,
           slots: {},
         };

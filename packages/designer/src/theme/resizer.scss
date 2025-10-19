@@ -12,8 +12,36 @@
   cursor: col-resize;
   z-index: 1;
   position: relative;
+  transition: all 0.2s ease;
+  user-select: none;
 
+  // 增加视觉反馈
   &:hover {
     border-color: #d8dee8;
+
+  }
+  // 添加中间的拖拽指示器
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 2px;
+    height: 20px;
+    background: currentColor;
+    border-radius: 1px;
+    opacity: 0.5;
+    transition: opacity 0.2s ease;
+  }
+
+  &:hover::before {
+    opacity: 0.8;
+  }
+
+  // 响应式设计 - 在小屏幕上增加宽度
+  @media (max-width: 768px) {
+    width: 12px;
+    margin: 0 -6px;
   }
 }

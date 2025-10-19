@@ -50,7 +50,7 @@ export async function pageAssistModel(params: ModelParams) {
           headers: [],
         }),
       },
-    }) as any;
+    });
   }
 
   return new ChatOllama({

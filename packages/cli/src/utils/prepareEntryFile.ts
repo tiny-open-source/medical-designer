@@ -3,12 +3,12 @@ import type App from '../Core';
 import * as recast from 'recast';
 import { EntryType } from '../types';
 
-const makeCamelCase = function (name: string): string {
+function makeCamelCase(name: string): string {
   if (typeof name !== 'string') {
     return '';
   }
   return name.replace(/-(\w)/g, ($0, $1) => $1.toUpperCase());
-};
+}
 
 export function prepareEntryFile(app: App) {
   const { componentMap = {}, pluginMap = {}, configMap = {}, valueMap = {}, eventMap = {} } = app.moduleMainFilePath;

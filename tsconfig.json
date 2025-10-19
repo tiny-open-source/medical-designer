@@ -24,7 +24,7 @@
     "strict": true,
     "declaration": true,
     "importHelpers": true,
-    "outDir": "temp",
+    "outDir": ".temp",
     "sourceMap": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,

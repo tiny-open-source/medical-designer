@@ -1,6 +1,6 @@
 <script setup lang="ts" name="LForm">
 import type { FormConfig, FormState, FormValue } from './schema';
-import { cloneDeep, isEqual } from 'lodash-es';
+import { cloneDeep } from 'lodash-es';
 import { NForm } from 'naive-ui';
 import { provide, reactive, ref, toRaw, watch } from 'vue';
 import { initValue } from './utils/form';

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { PropType } from 'vue';
-import type { FormState, NumberConfig } from '../schema';
+import type { NumberConfig } from '../schema';
 import { NInputNumber } from 'naive-ui';
-import { computed, inject } from 'vue';
+import { computed } from 'vue';
 import fieldProps from '../utils/fieldProps';
 
 defineOptions({
@@ -16,14 +16,9 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(['change', 'input']);
-const lForm = inject<FormState | undefined>('lForm');
+const emit = defineEmits(['change']);
 const modelName = computed(() => props.name || props.config.name || '');
 
-function inputHandler(value: number | null) {
-  emit('input', modelName, value);
-  lForm?.$emit('fieldInput', props.prop, value);
-}
 const modelValue = computed({
   get: () => Number(props.model[modelName.value]),
   set: (value) => {
@@ -35,8 +30,8 @@ const modelValue = computed({
 <template>
   <NInputNumber
     v-model:value="modelValue"
-    clearable
+    :step="config.step"
     :disabled="disabled"
-    @input="inputHandler"
+    clearable
   />
 </template>

@@ -1,8 +1,7 @@
 import { NScrollbar } from 'naive-ui';
 import { defineComponent } from 'vue';
-import { useMessageOption } from '../../composables/chat';
+import { useEnhancedMessageOption } from '../../composables/chat';
 import { useOllamaStatus } from '../../composables/ollama';
-import aiAssistantService from '../../service/ai-assistant.service';
 import { ModelType } from '../../utils/constants';
 import { useMultiModel } from '../../utils/storage';
 import Header from './ChatHeader';
@@ -36,10 +35,9 @@ export default defineComponent({
     );
     // 消息处理
     const { onSubmit, messages, streaming, stopStreamingRequest, resetState }
-      = useMessageOption(
+      = useEnhancedMessageOption(
         currentModel,
       );
-
     // 处理消息更新，增强自动化工作流
     watch(messages, async () => {
       // 滚动到最新消息
@@ -53,18 +51,6 @@ export default defineComponent({
         if (latestMessage.generationInfo) {
           try {
             console.log('最新消息:', latestMessage);
-
-            const toolResult = await aiAssistantService!.processResponse(latestMessage.message);
-
-            // 如果有工具执行结果，将其添加到新消息中
-            if (toolResult) {
-              // 延迟很短时间再发送，确保UI状态正确更新
-              await new Promise(resolve => setTimeout(resolve, 50));
-              await onSubmit({
-                message: typeof toolResult === 'string' ? toolResult : JSON.stringify(toolResult),
-                image: '',
-              });
-            }
           }
           catch (error) {
             console.error('工具执行失败:', error);
@@ -73,40 +59,13 @@ export default defineComponent({
       }
     }, { deep: true });
 
-    // 处理图片上传和分析
-    const processImage = async (message: string, image: string): Promise<string | undefined> => {
-      if (!image)
-        return;
-      // 如果有图片，切换到vision_model
-      activeModelType.value = ModelType.VISION;
-      try {
-        const response = await onSubmit({
-          message: `<user_image_query>${message || '开始分析'}</user_image_query>`,
-          image,
-        });
-        console.log('response.message:', response.message);
-
-        return response.message;
-      }
-      catch (error) {
-        console.error('发送消息失败:', error);
-        // 可以在这里添加错误提示
-      }
-    };
     // 发送消息
     const sendMessage = async ({ message, image }: { message: string;image: string }) => {
-      if (image) {
-        const res = await processImage(message, image);
-        if (res) {
-          message = res;
-          resetState();
-        }
-      }
       activeModelType.value = ModelType.MAIN;
       try {
         await onSubmit({
-          message: `<user_query>${message}</user_query>`,
-          image: '',
+          message,
+          image,
         });
       }
       catch (error) {
@@ -120,6 +79,9 @@ export default defineComponent({
       await sendMessage({
         message,
         image,
+      });
+      nextTick(() => {
+        divRef.value?.scrollIntoView({ behavior: 'smooth' });
       });
     };
     const handleNewChat = () => {

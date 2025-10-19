@@ -5,7 +5,7 @@ import {
   NPopconfirm,
 } from 'naive-ui';
 import { defineComponent } from 'vue';
-import ChatConfig from './ChatConfig';
+import ConfigButton from './ConfigButton';
 
 export default defineComponent({
   name: 'Header',
@@ -39,7 +39,7 @@ export default defineComponent({
           >
             开启新聊天将清空当前聊天记录，是否继续？
           </NPopconfirm>
-          <ChatConfig onSave={() => emit('settingSaved')} />
+          <ConfigButton onSave={() => emit('settingSaved')} />
         </div>
       </div>
     );

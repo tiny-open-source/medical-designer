@@ -39,7 +39,7 @@ const config = {
           name: 'borderBottomLeftRadius',
           labelIcon: markRaw(RadiusBottomleftOutlined),
           text: '左下圆角',
-          type: 'text',
+          type: 'number',
         },
         {
           labelWidth: '68px',

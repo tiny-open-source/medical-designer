@@ -3,10 +3,12 @@ import { reactive, toRaw } from 'vue';
 import BaseService from '../services/base.service';
 import designerService from './designer.service';
 
-const DEFAULT_LEFT_COLUMN_WIDTH = 310;
-const MIN_LEFT_COLUMN_WIDTH = 60;
-const DEFAULT_RIGHT_COLUMN_WIDTH = 480;
-const MIN_RIGHT_COLUMN_WIDTH = 380;
+// 导出常量供其他组件使用
+export const DEFAULT_LEFT_COLUMN_WIDTH = 310;
+export const MIN_LEFT_COLUMN_WIDTH = 60;
+export const DEFAULT_RIGHT_COLUMN_WIDTH = 480;
+export const MIN_RIGHT_COLUMN_WIDTH = 380;
+export const MIN_CENTER_COLUMN_WIDTH = 200;
 
 const COLUMN_WIDTH_STORAGE_KEY = '$MagicEditorColumnWidthData';
 const BODY_WIDTH = globalThis.document.body.clientWidth;
@@ -86,20 +88,29 @@ class Ui extends BaseService {
   private setColumnWidth({ left, right }: SetColumnWidth) {
     const columnWidth = {
       ...toRaw(this.get('columnWidth')),
-    };
+    }; // 获取当前窗口宽度
+    const currentBodyWidth = globalThis.document.body.clientWidth;
 
-    if (left) {
+    if (left !== undefined) {
       columnWidth.left = Math.max(left, MIN_LEFT_COLUMN_WIDTH);
+      // 确保左侧列不会太大，给中间列和右侧列留出空间
+      const maxLeft = currentBodyWidth - columnWidth.right - MIN_CENTER_COLUMN_WIDTH;
+      columnWidth.left = Math.min(columnWidth.left, maxLeft);
     }
-    if (right) {
+    if (right !== undefined) {
       columnWidth.right = Math.max(right, MIN_RIGHT_COLUMN_WIDTH);
+      // 确保右侧列不会太大，给中间列和左侧列留出空间
+      const maxRight = currentBodyWidth - columnWidth.left - MIN_CENTER_COLUMN_WIDTH;
+      columnWidth.right = Math.min(columnWidth.right, maxRight);
     }
 
     // 计算中间列的宽度
-    columnWidth.center = BODY_WIDTH - (columnWidth?.left || 0) - (columnWidth?.right || 0);
-    if (columnWidth.center <= 0) {
+    columnWidth.center = currentBodyWidth - (columnWidth?.left || 0) - (columnWidth?.right || 0);
+
+    // 如果中间列宽度小于最小值，重置为默认值
+    if (columnWidth.center < MIN_CENTER_COLUMN_WIDTH) {
       columnWidth.left = defaultColumnWidth.left;
-      columnWidth.center = defaultColumnWidth.center;
+      columnWidth.center = currentBodyWidth - defaultColumnWidth.left - defaultColumnWidth.right;
       columnWidth.right = defaultColumnWidth.right;
     }
 

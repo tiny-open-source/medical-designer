@@ -5,7 +5,9 @@ import utc from 'dayjs/plugin/utc';
 import { set as objectSet } from 'lodash-es';
 
 dayjs.extend(utc);
+
 export * from './dom';
+export * from './parser';
 
 export function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => {

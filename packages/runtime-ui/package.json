@@ -7,12 +7,14 @@
   "license": "ISC",
   "keywords": [],
   "main": "src/index.ts",
+  "peerDependencies": {
+    "vue": "3.5.17"
+  },
   "dependencies": {
     "@low-code/core": "workspace:^",
     "@low-code/schema": "workspace:^",
     "@low-code/utils": "workspace:^",
-    "qrcode": "^1.5.4",
-    "vue": "^3.5.13"
+    "qrcode": "^1.5.4"
   },
   "devDependencies": {
     "@types/qrcode": "^1.5.5"

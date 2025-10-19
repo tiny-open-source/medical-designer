@@ -1,10 +1,9 @@
 import PromiseWorker from 'promise-worker';
-import { FigmaParser } from './parser/core';
 import FigmaParseWorker from './worker?worker';
 
 const figmaParseWorker = new FigmaParseWorker();
 const promiseFigmaParserWorker = new PromiseWorker(figmaParseWorker);
-function parse(code: string) {
+function figmaParser(code: string) {
   return promiseFigmaParserWorker.postMessage({
     type: 'parse',
     message: code,
@@ -12,6 +11,5 @@ function parse(code: string) {
 }
 
 export {
-  FigmaParser,
-  parse,
+  figmaParser,
 };

@@ -5,17 +5,17 @@ import { fileURLToPath } from 'node:url';
 import alias from '@rollup/plugin-alias';
 import dts from 'rollup-plugin-dts';
 
-if (!existsSync('temp')) {
+if (!existsSync('.temp')) {
   console.warn(
-    'no temp dts files found. run `tsc -p tsconfig.build-browser.json && vue-tsc --declaration --emitDeclarationOnly --project tsconfig.build-vue.json` first.',
+    'no .temp dts files found. run `tsc -p tsconfig.build-browser.json && vue-tsc --declaration --emitDeclarationOnly --project tsconfig.build-vue.json` first.',
   );
   process.exit(1);
 }
 
-removeScss('temp/designer/src/index.d.ts');
-removeScss('temp/form/src/index.d.ts');
+removeScss('.temp/designer/src/index.d.ts');
+removeScss('.temp/form/src/index.d.ts');
 
-const packages = readdirSync('temp');
+const packages = readdirSync('.temp');
 const targets = process.env.TARGETS ? process.env.TARGETS.split(',') : null;
 const targetPackages = targets ? packages.filter(pkg => targets.includes(pkg)) : packages;
 
@@ -23,7 +23,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 function rollupConfig(pkg, base) {
   return {
-    input: `./temp/${pkg}/src/index.d.ts`,
+    input: `./.temp/${pkg}/src/index.d.ts`,
     output: {
       file: `${base}/${pkg}/types/index.d.ts`,
       format: 'es',
@@ -31,8 +31,8 @@ function rollupConfig(pkg, base) {
     plugins: [
       alias({
         entries: [
-          { find: /^@form/, replacement: path.join(__dirname, `./temp/form/src`) },
-          { find: /^@designer/, replacement: path.join(__dirname, `./temp/designer/src`) },
+          { find: /^@form/, replacement: path.join(__dirname, `./.temp/form/src`) },
+          { find: /^@designer/, replacement: path.join(__dirname, `./.temp/designer/src`) },
         ],
       }),
       dts(),

@@ -1,0 +1,107 @@
+/* ToolCallConfirmation 组件样式 */
+.lc-llm-tool-call-confirmation {
+  background-color: #fef3c7;
+  border: 1px solid #fcd34d;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 12px 0;
+}
+
+.lc-llm-tool-call-confirmation__content {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.lc-llm-tool-call-confirmation__icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.lc-llm-tool-call-confirmation__message {
+  flex: 1;
+}
+
+.lc-llm-tool-call-confirmation__title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #92400e;
+  margin-bottom: 4px;
+}
+
+.lc-llm-tool-call-confirmation__details {
+  font-size: 14px;
+  color: #d97706;
+  margin-bottom: 0;
+}
+
+.lc-llm-tool-call-confirmation__actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.lc-llm-tool-call-confirmation__button {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.lc-llm-tool-call-confirmation__button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+}
+
+.lc-llm-tool-call-confirmation__button--cancel {
+  background-color: #e5e7eb;
+  color: #374151;
+}
+
+.lc-llm-tool-call-confirmation__button--cancel:hover {
+  background-color: #d1d5db;
+}
+
+.lc-llm-tool-call-confirmation__button--continue {
+  background-color: #2563eb;
+  color: white;
+}
+
+.lc-llm-tool-call-confirmation__button--continue:hover {
+  background-color: #1d4ed8;
+}
+
+/* 深色模式支持 */
+.dark .lc-llm-tool-call-confirmation {
+  background-color: rgba(251, 191, 36, 0.1);
+  border-color: rgba(217, 119, 6, 0.3);
+}
+
+.dark .lc-llm-tool-call-confirmation__title {
+  color: #fcd34d;
+}
+
+.dark .lc-llm-tool-call-confirmation__details {
+  color: #f59e0b;
+}
+
+.dark .lc-llm-tool-call-confirmation__button--cancel {
+  background-color: #374151;
+  color: #e5e7eb;
+}
+
+.dark .lc-llm-tool-call-confirmation__button--cancel:hover {
+  background-color: #4b5563;
+}
+
+.dark .lc-llm-tool-call-confirmation__button--continue {
+  background-color: #1e40af;
+}
+
+.dark .lc-llm-tool-call-confirmation__button--continue:hover {
+  background-color: #1e3a8a;
+}

@@ -1,0 +1,272 @@
+/* 工具调用历史样式 */
+.lc-llm-tool-history {
+  margin-top: 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background-color: #f8fafc;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.dark .lc-llm-tool-history {
+  border-color: #374151;
+  background-color: #1e293b;
+}
+
+/* 简洁历史显示 */
+.lc-llm-tool-history__simple {
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 10px;
+}
+
+.lc-llm-tool-history__simple:hover {
+  background-color: rgba(0, 0, 0, 0.03);
+  transform: translateY(-1px);
+}
+
+.dark .lc-llm-tool-history__simple:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.lc-llm-tool-history__simple-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lc-llm-tool-history__simple-icon {
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+}
+
+.lc-llm-tool-history__simple-text {
+  font-size: 12px;
+  font-weight: 500;
+  color: #475569;
+  flex: 1;
+  margin-left: 2px;
+}
+
+.dark .lc-llm-tool-history__simple-text {
+  color: #cbd5e1;
+}
+
+.lc-llm-tool-history__expand-icon {
+  font-size: 10px;
+  color: #9ca3af;
+  transition: all 0.2s ease;
+  opacity: 0.7;
+  margin-left: 4px;
+}
+
+.lc-llm-tool-history__simple:hover .lc-llm-tool-history__expand-icon {
+  color: #6b7280;
+  opacity: 1;
+}
+
+.dark .lc-llm-tool-history__expand-icon {
+  color: #6b7280;
+}
+
+.dark .lc-llm-tool-history__simple:hover .lc-llm-tool-history__expand-icon {
+  color: #9ca3af;
+}
+
+/* 详细历史展开区域 */
+.lc-llm-tool-history__expanded {
+  border-top: 1px solid #e5e7eb;
+  background-color: #f9fafb;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.dark .lc-llm-tool-history__expanded {
+  border-top-color: #374151;
+  background-color: #111827;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.lc-llm-tool-history__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background-color: #f1f5f9;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.dark .lc-llm-tool-history__header {
+  background-color: #334155;
+  border-bottom-color: #475569;
+}
+
+.lc-llm-tool-history__title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #475569;
+}
+
+.dark .lc-llm-tool-history__title {
+  color: #cbd5e1;
+}
+
+.lc-llm-tool-history__count {
+  font-size: 11px;
+  color: #64748b;
+}
+
+.dark .lc-llm-tool-history__count {
+  color: #94a3b8;
+}
+
+.lc-llm-tool-history__list {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+/* 工具调用历史项 */
+.lc-llm-tool-history-item {
+  padding: 8px 12px;
+  border-bottom: 1px solid #f1f5f9;
+  transition: all 0.2s ease;
+}
+
+.lc-llm-tool-history-item:last-child {
+  border-bottom: none;
+}
+
+.lc-llm-tool-history-item:hover {
+  background-color: #f8fafc;
+}
+
+.dark .lc-llm-tool-history-item {
+  border-bottom-color: #334155;
+}
+
+.dark .lc-llm-tool-history-item:hover {
+  background-color: #334155;
+}
+
+.lc-llm-tool-history-item--completed {
+  border-left: 3px solid #10b981;
+}
+
+.lc-llm-tool-history-item--failed {
+  border-left: 3px solid #ef4444;
+}
+
+.lc-llm-tool-history-item__header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.lc-llm-tool-history-item__icon {
+  font-size: 14px;
+}
+
+.lc-llm-tool-history-item__name {
+  font-weight: 500;
+  color: #374151;
+  flex: 1;
+}
+
+.dark .lc-llm-tool-history-item__name {
+  color: #d1d5db;
+}
+
+.lc-llm-tool-history-item__status {
+  font-size: 12px;
+}
+
+.lc-llm-tool-history-item__round {
+  font-size: 10px;
+  color: #6b7280;
+  background-color: #e5e7eb;
+  padding: 1px 4px;
+  border-radius: 4px;
+}
+
+.dark .lc-llm-tool-history-item__round {
+  color: #9ca3af;
+  background-color: #4b5563;
+}
+
+.lc-llm-tool-history-item__time {
+  font-size: 10px;
+  color: #9ca3af;
+  margin-left: auto;
+}
+
+.dark .lc-llm-tool-history-item__time {
+  color: #6b7280;
+}
+
+.lc-llm-tool-history-item__description {
+  font-size: 11px;
+  color: #6b7280;
+  margin-top: 4px;
+  padding-left: 20px;
+}
+
+.dark .lc-llm-tool-history-item__description {
+  color: #9ca3af;
+}
+
+.lc-llm-tool-history-item__count {
+  font-size: 11px;
+  color: #7c3aed;
+  margin-top: 4px;
+  padding-left: 20px;
+  font-weight: 500;
+}
+
+.dark .lc-llm-tool-history-item__count {
+  color: #a78bfa;
+}
+
+/* 滚动条样式 */
+.lc-llm-tool-history__list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.lc-llm-tool-history__list::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+.lc-llm-tool-history__list::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 2px;
+}
+
+.lc-llm-tool-history__list::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.dark .lc-llm-tool-history__list::-webkit-scrollbar-track {
+  background: #334155;
+}
+
+.dark .lc-llm-tool-history__list::-webkit-scrollbar-thumb {
+  background: #475569;
+}
+
+.dark .lc-llm-tool-history__list::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}

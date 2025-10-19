@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import type { MenuBarData, MoveableOptions } from '@low-code/designer';
 import type StageCore from '@low-code/stage';
-import { parse as parseByWorker } from '@low-code/adapter';
 import { LowCodeDesigner } from '@low-code/designer';
 import { NodeType } from '@low-code/schema';
-import { asyncLoadJs } from '@low-code/utils';
+import { asyncLoadJs, figmaParser } from '@low-code/utils';
 import { CodeOutlined, ImportOutlined, PlayCircleOutlined, SaveOutlined } from '@vicons/antd';
 import { dateZhCN, NConfigProvider, NDialogProvider, NMessageProvider, zhCN } from 'naive-ui';
 import serialize from 'serialize-javascript';
+import pkg from '../../package.json';
 import { ThemeColorConfig } from '../theme.config';
 import DeviceGroup from './components/DeviceGroup';
 import GlobalMessageSetup from './components/GlobalMessageSetup';
@@ -50,7 +50,7 @@ asyncLoadJs(
 function parse(code: string) {
   try {
     const loading = (window as any).$message.loading('导入中');
-    parseByWorker(code).then((res) => {
+    figmaParser(code).then((res) => {
       dsl.value = res.data;
       loading.destroy();
       (window as any).$message.success('导入成功');
@@ -126,7 +126,7 @@ const menu: MenuBarData = {
   left: [
     {
       type: 'text',
-      text: '模板编辑器',
+      text: `模板编辑器 v${pkg.version}`,
     },
   ],
   center: ['delete', 'undo', 'redo', 'guides', 'rule', 'zoom'],

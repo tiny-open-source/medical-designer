@@ -14,7 +14,7 @@ interface AppOptionsConfig {
   transformStyle?: (style: Record<string, any>) => Record<string, any>;
 }
 
-type PlatformType = 'designer' | 'device' | 'browser';
+type PlatformType = 'designer' | 'device';
 
 interface EventCache {
   eventConfig: EventItemConfig;
@@ -55,9 +55,9 @@ class App extends EventEmitter {
     if (jsEngine)
       this.jsEngine = jsEngine;
 
-    if (this.platform === 'device' || this.platform === 'browser') {
-      this.initializeFontSize();
-    }
+    // if (this.platform === 'device' || this.platform === 'designer') {
+    //   this.initializeFontSize();
+    // }
 
     if (transformStyle) {
       this.transformStyle = transformStyle;
@@ -70,18 +70,18 @@ class App extends EventEmitter {
     bindCommonEventListener(this);
   }
 
-  private initializeFontSize(): void {
-    const calcFontsize = (): void => {
-      let { width } = document.documentElement.getBoundingClientRect();
-      width = Math.max(600, width);
-      const fontSize = width / 10.24;
-      this.rootFontSize = document.documentElement.style.fontSize = `${fontSize}px`;
-    };
+  // private initializeFontSize(): void {
+  //   const calcFontsize = (): void => {
+  //     let { width } = document.documentElement.getBoundingClientRect();
+  //     width = Math.max(600, width);
+  //     const fontSize = width / 10.24;
+  //     this.rootFontSize = document.documentElement.style.fontSize = `${fontSize}px`;
+  //   };
 
-    calcFontsize();
-    document.body.style.fontSize = '14px';
-    globalThis.addEventListener('resize', calcFontsize);
-  }
+  //   calcFontsize();
+  //   document.body.style.fontSize = '14px';
+  //   globalThis.addEventListener('resize', calcFontsize);
+  // }
 
   public transformStyle(style: Record<string, any>): Record<string, any> {
     if (!style)
@@ -179,7 +179,8 @@ class App extends EventEmitter {
 
     this.page = page;
 
-    if (this.platform !== 'browser') {
+    // 设计器联动模式下不需要绑定事件,同样也无需更新
+    if (this.platform !== 'designer') {
       this.bindEvents();
     }
     this.calcZoomRatio(page);
@@ -232,6 +233,7 @@ class App extends EventEmitter {
     if (DEFAULT_EVENTS.findIndex(defaultEvent => defaultEvent.value === eventName) > -1) {
       eventName = getCommonEventName(eventName, id);
     }
+    console.log('bindEvent', eventName, id, event);
 
     this.on(eventName, (fromCpt, ...args) => {
       this.eventHandler(event, fromCpt, args);
